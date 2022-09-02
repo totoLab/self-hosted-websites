@@ -1,0 +1,20 @@
+---
+import CoolNav from "../components/CoolNav.astro";
+
+const texts = [ 'Instagram', 'Telegram', 'Twitter' ];
+const links = [
+    'https://instagram.com/antolab',
+    'https://t.me/antolab',
+    'http://twitter.com/antolab_',
+];
+const icons = [ 'photo_camera', 'send', 'flutter_dash' ];
+---
+
+<footer class="footer">
+    <div class="container">
+        <div>
+        <h4> Work in progress. Made with Astro. </h4> 
+        </div>
+        <CoolNav items={ links } icons={ icons } texts={ texts } textColor={'red'} />
+    </div>
+</footer>

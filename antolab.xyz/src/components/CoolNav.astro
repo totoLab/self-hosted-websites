@@ -1,0 +1,35 @@
+---
+export interface Props {
+    items: string[];
+    icons: string[];
+    texts: string[];
+    textColor?: string;
+}
+
+const { items = [], icons = [], texts = [], textColor = 'red' } = Astro.props as Props;
+const mappedValues = items.map((item: string, i: number) => ({item, icon: icons[i], text: texts[i]}));
+
+const iconsPack = 'material-icons';
+---
+
+<nav>
+    <ul>
+        {mappedValues.map(( triplet ) => (
+            <li><a href={ triplet.item }><span class={ iconsPack }>{ triplet.icon }</span>{ triplet.text }</a></li>
+        ))}
+    </ul>    
+</nav>
+
+<style>
+nav ul {
+  display: flex;
+}
+
+nav ul li {
+  padding: 0 10px;
+}
+
+nav ul li a {
+  color: textColor;
+}
+</style>
