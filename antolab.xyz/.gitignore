@@ -2,6 +2,7 @@
 dist/
 .output/
 public/
+html/
 
 # dependencies
 node_modules/
