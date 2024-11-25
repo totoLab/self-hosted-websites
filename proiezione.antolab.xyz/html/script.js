@@ -15,6 +15,7 @@ function processJsonContent(content) {
 
     content = content.replace(pattern, replaceNewlinesAndEscapeQuotes);
 
+    content = content.replace(/[\x00-\x1F\x7F\xFEFF]/g, '');
     content = content.replace(/\t/g, '');
 
     return content;
