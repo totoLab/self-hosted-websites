@@ -109,32 +109,28 @@ dropZone.addEventListener('drop', (e) => {
 
 
 const files = ["Altri.json", "Grande è il Signore.json", "Inni di Lode.json", "Canta con noi.json", "rcyouth.json"];
-document.addEventListener("DOMContentLoaded", () => {
+const fileList = document.getElementById('fileList');
 
-    const fileList = document.getElementById('fileList');
+files.forEach(file => {
+    const listItem = document.createElement('li');
+    listItem.textContent = file;
+    
+    listItem.onclick = () => {
+        fetch(`${file}`) 
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${file}: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(content => {
+                processContent(content);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                alert(`Could not load file: ${error.message}`);
+            });
+    };
 
-    files.forEach(file => {
-        const listItem = document.createElement('li');
-        listItem.textContent = file;
-
-        listItem.onclick = () => {
-            fetch(`${file}`) 
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to load ${file}: ${response.statusText}`);
-                    }
-                    return response.text();
-                })
-                .then(content => {
-                    processContent(content);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    alert(`Could not load file: ${error.message}`);
-                });
-        };
-
-        // Append the list item to the file list
-        fileList.appendChild(listItem);
-    });
+    fileList.appendChild(listItem);
 });
