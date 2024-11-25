@@ -25,6 +25,11 @@ h3 {
     color: #333;
 }
 
+img {
+    width: 100px;
+    height: 100px;
+}
+
 /* Drop Zone Styling */
 #dropZone {
     width: 80%;
