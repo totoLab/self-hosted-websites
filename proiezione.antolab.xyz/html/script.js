@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         listItem.textContent = file;
 
         listItem.onclick = () => {
-            fetch(`SongBooks/${file}`) 
+            fetch(`${file}`) 
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Failed to load ${file}: ${response.statusText}`);
