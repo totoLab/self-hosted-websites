@@ -12,6 +12,13 @@ body {
     flex-direction: column;
 }
 
+ul {
+    list-style-type: none;
+    list-style-position: inherit;
+    padding: 0;
+    margin: 0;
+}
+
 /* Heading Style */
 h2 {
     font-size: 2rem;
@@ -69,7 +76,6 @@ h3 {
     gap: 20px; /* Space between items */
     padding: 0;
     margin: 0;
-    list-style: none;
 }
 
 #fileList li {
@@ -109,6 +115,7 @@ h3 {
     width: 80%;
     max-width: 600px;
     margin-top: 40px;
+    align-content: center;
 }
 
 /* Title for Song List */
