@@ -40,7 +40,10 @@ function displaySongs(title, songs) {
         
         var lyrics = "";
         song.Verses.forEach(verse => {
-            lyrics += verse.Text.replace(/\n/g, '<br>') + "<br><br>";
+            verseText = verse.Text;
+            if (verseText) {
+                lyrics += verseText.replace(/\n/g, '<br>') + "<br><br>";
+            }
         });
         songLyrics.innerHTML = lyrics;
 
@@ -54,19 +57,19 @@ function displaySongs(title, songs) {
 function processContent(content) {
     content = processJsonContent(content);
 
-            try {
-                const parsed_content = JSON.parse(content);
-                const title = parsed_content["Text"];
-                const songs = parsed_content["Songs"];
+    try {
+        const parsed_content = JSON.parse(content);
+        var title = parsed_content["Text"];
+        const songs = parsed_content["Songs"];
 
-                if (Array.isArray(songs)) {
-                    displaySongs(title, songs);
-                } else {
-                    alert('Invalid song data format.');
-                }
-            } catch (error) {
-                alert('Error parsing JSON: ' + error.message);
-            }
+        if (Array.isArray(songs)) {
+            displaySongs(title, songs);
+        } else {
+            alert('Invalid song data format.');
+        }
+    } catch (error) {
+        alert('Error parsing JSON: ' + error.message);
+    }
 }
 
 let file;
