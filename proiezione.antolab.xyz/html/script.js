@@ -69,15 +69,16 @@ function processContent(content) {
             }
 }
 
-var file;
+let file;
+
 function update() {
     if (file) {
         const reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             let content = e.target.result;
 
-            orocessContent(content);
+            processContent(content);
         };
 
         reader.readAsText(file);
@@ -86,12 +87,12 @@ function update() {
     }
 }
 
-document.getElementById('fileInput').addEventListener('change', function(event) {
+document.getElementById('fileInput').addEventListener('change', function (event) {
     file = event.target.files[0];
     update();
 });
 
-// Handling drag and drop events
+
 const dropZone = document.getElementById('dropZone');
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
@@ -106,6 +107,10 @@ dropZone.addEventListener('drop', (e) => {
     file = e.dataTransfer.files[0];
     update();
 });
+
+dropZone.addEventListener('click', () => {
+    fileInput.click();
+})
 
 const files = ["Altri.json", "Grande è il Signore.json", "Inni di Lode.json", "Canta con noi.json", "rcyouth.json"];
 const fileList = document.getElementById('fileList');
