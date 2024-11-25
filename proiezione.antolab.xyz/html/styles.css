@@ -19,6 +19,20 @@ ul {
     margin: 0;
 }
 
+#ghlink {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    margin-top: 25px;
+    font-size: 22px;
+}
+
+#ghlink h5 {
+    margin: 0; 
+}
+
 /* Heading Style */
 h2 {
     font-size: 2rem;
