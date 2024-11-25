@@ -12,16 +12,17 @@ body {
     flex-direction: column;
 }
 
-ul {
-    list-style: none;
-}
-
 /* Heading Style */
 h2 {
     font-size: 2rem;
     color: #4a90e2;
     text-align: center;
     margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 1.3rem;
+    color: #333;
 }
 
 /* Drop Zone Styling */
@@ -46,6 +47,34 @@ h2 {
 #dropZone.dragover {
     background-color: #e6f2ff;
     border-color: #1a73e8;
+}
+
+/* Available Files List Styling */
+#availableFiles {
+    margin-top: 30px;
+    width: 80%;
+    max-width: 600px;
+}
+
+#fileList {
+    list-style: none;
+    padding-left: 0;
+}
+
+#fileList li {
+    font-size: 1.1rem;
+    color: #333;
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px solid #e1e8f0;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#fileList li:hover {
+    background-color: #e6f2ff;
 }
 
 /* Song List Container */
@@ -105,7 +134,6 @@ h2 {
     #dropZone {
         width: 90%;
         font-size: 1rem;
-        padding: 20px;
     }
 
     #songList {

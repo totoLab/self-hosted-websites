@@ -50,15 +50,8 @@ function displaySongs(title, songs) {
     });
 }
 
-var file;
-function update() {
-    if (file) {
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            let content = e.target.result;
-
-            content = processJsonContent(content);
+function processContent(content) {
+    content = processJsonContent(content);
 
             try {
                 const parsed_content = JSON.parse(content);
@@ -73,6 +66,17 @@ function update() {
             } catch (error) {
                 alert('Error parsing JSON: ' + error.message);
             }
+}
+
+var file;
+function update() {
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            let content = e.target.result;
+
+            orocessContent(content);
         };
 
         reader.readAsText(file);
@@ -88,28 +92,49 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 
 // Handling drag and drop events
 const dropZone = document.getElementById('dropZone');
-
-dropZone.addEventListener('dragover', function(event) {
-    event.preventDefault();
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
     dropZone.classList.add('dragover');
 });
-
-dropZone.addEventListener('dragleave', function() {
+dropZone.addEventListener('dragleave', () => {
     dropZone.classList.remove('dragover');
 });
-
-dropZone.addEventListener('drop', function(event) {
-    event.preventDefault();
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
     dropZone.classList.remove('dragover');
-    
-    const files = event.dataTransfer.files;
-    if (files.length > 0) {
-        file = files[0];
-        update();
-    }
+    file = e.dataTransfer.files[0];
+    update();
 });
 
-// Trigger file picker when drop zone is clicked
-dropZone.addEventListener('click', function() {
-    document.getElementById('fileInput').click();
+
+
+const files = ["Altri.json", "Grande è il Signore.json", "Inni di Lode.json", "Canta con noi.json", "rcyouth.json"];
+document.addEventListener("DOMContentLoaded", () => {
+
+    const fileList = document.getElementById('fileList');
+
+    files.forEach(file => {
+        const listItem = document.createElement('li');
+        listItem.textContent = file;
+
+        listItem.onclick = () => {
+            fetch(`SongBooks/${file}`) 
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to load ${file}: ${response.statusText}`);
+                    }
+                    return response.text();
+                })
+                .then(content => {
+                    processContent(content);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    alert(`Could not load file: ${error.message}`);
+                });
+        };
+
+        // Append the list item to the file list
+        fileList.appendChild(listItem);
+    });
 });
