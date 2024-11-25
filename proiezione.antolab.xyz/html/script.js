@@ -106,17 +106,23 @@ dropZone.addEventListener('drop', (e) => {
     update();
 });
 
-
-
 const files = ["Altri.json", "Grande è il Signore.json", "Inni di Lode.json", "Canta con noi.json", "rcyouth.json"];
 const fileList = document.getElementById('fileList');
 
 files.forEach(file => {
-    const listItem = document.createElement('li');
-    listItem.textContent = file;
-    
+    const listItem = document.createElement('li');    
+    const fileName = document.createElement('span');
+    fileName.textContent = file;
+    const image = document.createElement('img');
+    image.src = "icon.png";
+    image.alt = "File Icon";
+    image.width = 40;
+    image.height = 40;
+    listItem.appendChild(image);
+    listItem.appendChild(fileName);
+
     listItem.onclick = () => {
-        fetch(`${file}`) 
+        fetch(`${file}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Failed to load ${file}: ${response.statusText}`);

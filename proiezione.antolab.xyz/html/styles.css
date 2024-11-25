@@ -57,24 +57,44 @@ h3 {
 }
 
 #fileList {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between items */
+    padding: 0;
+    margin: 0;
     list-style: none;
-    padding-left: 0;
 }
 
 #fileList li {
-    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1rem;
     color: #333;
     background-color: #ffffff;
     padding: 10px;
     border: 1px solid #e1e8f0;
-    margin-bottom: 10px;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    text-align: center;
+    width: 100px; /* Fixed width for consistent icon alignment */
 }
 
 #fileList li:hover {
     background-color: #e6f2ff;
+}
+
+.fileList li img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.fileName {
+    font-size: 0.9rem;
+    color: #555;
+    word-break: break-word; /* Prevent long names from breaking layout */
 }
 
 /* Song List Container */
@@ -129,26 +149,22 @@ h3 {
     display: none;
 }
 
-/* Make the entire page responsive */
+/* Responsive Design */
 @media (max-width: 768px) {
-    #dropZone {
-        width: 90%;
-        font-size: 1rem;
+    #fileList {
+        flex-wrap: wrap;
     }
 
-    #songList {
-        width: 90%;
+    #fileList li {
+        width: 80px; /* Adjust width for smaller screens */
     }
 
-    .songItem {
-        padding: 10px;
+    .fileIcon {
+        width: 30px;
+        height: 30px;
     }
 
-    .songName {
-        font-size: 1.1rem;
-    }
-
-    .songLyrics {
-        font-size: 1rem;
+    .fileName {
+        font-size: 0.8rem;
     }
 }
