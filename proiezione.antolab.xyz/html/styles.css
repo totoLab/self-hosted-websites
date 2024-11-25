@@ -1,0 +1,126 @@
+/* General Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+ul {
+    list-style: none;
+}
+
+/* Heading Style */
+h2 {
+    font-size: 2rem;
+    color: #4a90e2;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Drop Zone Styling */
+#dropZone {
+    width: 80%;
+    max-width: 600px;
+    height: 150px;
+    border: 2px dashed #4a90e2;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    color: #4a90e2;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* When the drop zone is hovered over or the file is dragged over */
+#dropZone.dragover {
+    background-color: #e6f2ff;
+    border-color: #1a73e8;
+}
+
+/* Song List Container */
+#songList {
+    width: 80%;
+    max-width: 600px;
+    margin-top: 40px;
+}
+
+/* Title for Song List */
+#songListTitle {
+    font-size: 1.5rem;
+    color: #4a90e2;
+    margin-bottom: 20px;
+}
+
+/* Styling the Song Items */
+.songItem {
+    background-color: #ffffff;
+    border: 1px solid #e1e8f0;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.songItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Song Name Styling */
+.songName {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Song Lyrics Styling */
+.songLyrics {
+    margin-left: 20px;
+    font-size: 1.1rem;
+    color: #555;
+    font-style: italic;
+    white-space: pre-wrap; /* Allows text to wrap naturally */
+}
+
+/* File Input Style (Hidden) */
+#fileInput {
+    display: none;
+}
+
+/* Make the entire page responsive */
+@media (max-width: 768px) {
+    #dropZone {
+        width: 90%;
+        font-size: 1rem;
+        padding: 20px;
+    }
+
+    #songList {
+        width: 90%;
+    }
+
+    .songItem {
+        padding: 10px;
+    }
+
+    .songName {
+        font-size: 1.1rem;
+    }
+
+    .songLyrics {
+        font-size: 1rem;
+    }
+}
