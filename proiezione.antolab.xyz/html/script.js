@@ -250,6 +250,7 @@ function update() {
 
         reader.onload = function (e) {
             let content = e.target.result;
+            originalSongItems = [];
 
             search_box.style.display = 'block';
             processContent(content);
@@ -312,6 +313,7 @@ files.forEach(file => {
             })
             .then(content => {
                 search_box.style.display = 'block';
+                originalSongItems = [];
 
                 processContent(content);
             })
