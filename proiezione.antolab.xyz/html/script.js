@@ -93,31 +93,69 @@ function calculateSimilarity(searchTerm, text) {
 
     // Early return for empty search
     if (!searchTerm) return 0;
-
+    
     // Exact match
-    if (text.includes(searchTerm)) return 1;
+    if (text === searchTerm) return 1;
+    if (text.includes(searchTerm)) return 0.9;
 
-    // Word-level matching with weighted scoring
+    // Levenshtein-inspired distance calculation
+    function levenshteinSimilarity(a, b) {
+        const maxLength = Math.max(a.length, b.length);
+        
+        // Create matrix
+        const matrix = Array.from({ length: a.length + 1 }, () => 
+            new Array(b.length + 1).fill(0)
+        );
+
+        // Initialize first row and column
+        for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+        for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+        // Calculate Levenshtein distance
+        for (let i = 1; i <= a.length; i++) {
+            for (let j = 1; j <= b.length; j++) {
+                if (a[i-1] === b[j-1]) {
+                    matrix[i][j] = matrix[i-1][j-1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i-1][j] + 1,     // Deletion
+                        matrix[i][j-1] + 1,     // Insertion
+                        matrix[i-1][j-1] + 1    // Substitution
+                    );
+                }
+            }
+        }
+
+        // Calculate similarity based on Levenshtein distance
+        const distance = matrix[a.length][b.length];
+        
+        // Convert distance to similarity score
+        // Lower distance means higher similarity
+        const similarity = 1 - (distance / maxLength);
+        
+        return Math.max(0, similarity);
+    }
+
+    // Split search term and text into words
     const searchWords = searchTerm.split(/\s+/);
     const textWords = text.split(/\s+/);
 
-    // Calculate word matching with prioritization
-    let matchScore = 0;
-    searchWords.forEach(searchWord => {
-        const exactMatch = textWords.some(textWord => textWord === searchWord);
-        const partialMatch = textWords.some(textWord => textWord.includes(searchWord));
-        
-        if (exactMatch) {
-            matchScore += 1; // Exact word match gets full point
-        } else if (partialMatch) {
-            matchScore += 0.5; // Partial match gets half point
-        }
+    // Calculate overall similarity
+    const wordSimilarities = searchWords.map(searchWord => {
+        // Find the best match among text words
+        const bestWordMatch = textWords.reduce((maxSim, textWord) => {
+            const wordSimilarity = levenshteinSimilarity(searchWord, textWord);
+            return Math.max(maxSim, wordSimilarity);
+        }, 0);
+
+        return bestWordMatch;
     });
 
-    // Normalize score
-    return Math.min(matchScore / searchWords.length, 1);
-}
+    // Average word similarities
+    const avgSimilarity = wordSimilarities.reduce((a, b) => a + b, 0) / searchWords.length;
 
+    return Math.min(avgSimilarity * 1.1, 1); // Slight boost, capped at 1
+}
 function searchSongs(searchTerm) {
     // Ensure original items are cached
     initializeSearch();
