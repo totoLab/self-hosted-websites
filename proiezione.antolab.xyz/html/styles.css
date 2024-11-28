@@ -76,6 +76,67 @@ h3 {
     border-color: #1a73e8;
 }
 
+/* Search Box Container */
+#search-box {
+    display: none; /* Hidden initially */
+    margin-top: 20px;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e1e8f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#search-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Search Label */
+#search-box label {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4a90e2;
+    margin-bottom: 10px;
+}
+
+/* Search Input Field */
+#search-box input[type="search"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #e1e8f0;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#search-box input[type="search"]:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Responsive Design for Search Box */
+@media (max-width: 768px) {
+    #search-box {
+        width: 90%;
+    }
+
+    #search-box input[type="search"] {
+        font-size: 0.9rem;
+    }
+
+    #search-box label {
+        font-size: 1rem;
+    }
+}
+
+
 /* Available Files List Styling */
 #availableFiles {
     margin-top: 30px;
@@ -128,7 +189,7 @@ h3 {
 #songList {
     width: 80%;
     max-width: 600px;
-    margin-top: 40px;
+    margin-top: 15px;
     align-content: center;
 }
 

@@ -16,12 +16,17 @@
     <h2>Scegli un file di VideoPsalm per vederne il contenuto</h2>
     <input type="file" id="fileInput" accept=".json" style="display: none;"> 
     <div id="dropZone">Drag and Drop your JSON file here, or click to select a file</div>
-
+    
     <div id="availableFiles">
         <h3>oppure clicca su uno dei file pronti</h3>
         <ul id="fileList"></ul>
     </div>
-
+    
+        <div id="search-box" style="display: none;">
+            <label for="search">Search:</label>
+            <input type="search" id="search" name="query" placeholder="Inserisci titolo, parole...">
+        </div>
+    
     <div id="songList">
         <h3 id="songListTitle"></h3>
         <ul id="songListItems"></ul>
