@@ -15,7 +15,11 @@ function processJsonContent(content) {
 
     content = content.replace(pattern, replaceNewlinesAndEscapeQuotes);
 
-    content = content.replace(/[\x00-\x1F\x7F\xFEFF]/g, '');
+    content = content.replace(/[\u001f-\u001f\u007f\uFEFF]/g, '');
+    content = content.replace(/[“”‘’‹›«»“”]/g, '\\"');
+    content = content.replace(/\u2026/g, '...');
+    content = content.replace(/\u0300/g, '\'');
+    content = content.replace(/\u00d7/g, 'x');
     content = content.replace(/\t/g, '');
 
     return content;
