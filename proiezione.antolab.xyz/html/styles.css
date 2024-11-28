@@ -136,6 +136,20 @@ h3 {
     }
 }
 
+#search-loading-bar {
+    width: 0%;
+    height: 3px;
+    background-color: #4CAF50;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width 0.3s ease;
+    z-index: 10;
+}
+
+#search-box {
+    position: relative;
+}
 
 /* Available Files List Styling */
 #availableFiles {

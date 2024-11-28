@@ -72,74 +72,140 @@ function processContent(content) {
     }
 }
 
-function levenshteinDistance(str1, str2) {
-    const len1 = str1.length;
-    const len2 = str2.length;
+// Global variable to track original items
+let originalSongItems = [];
 
-    const dp = Array.from({ length: len1 + 1 }, () => Array(len2 + 1).fill(0));
-
-    for (let i = 0; i <= len1; i++) dp[i][0] = i;
-    for (let j = 0; j <= len2; j++) dp[0][j] = j;
-
-    for (let i = 1; i <= len1; i++) {
-        for (let j = 1; j <= len2; j++) {
-            if (str1[i - 1] === str2[j - 1]) {
-                dp[i][j] = dp[i - 1][j - 1];
-            } else {
-                dp[i][j] = Math.min(
-                    dp[i - 1][j],     // Deletion
-                    dp[i][j - 1],     // Insertion
-                    dp[i - 1][j - 1]  // Substitution
-                ) + 1;
-            }
-        }
+function initializeSearch() {
+    // Cache original song items on first load
+    if (originalSongItems.length === 0) {
+        originalSongItems = Array.from(document.querySelectorAll('.songItem')).map(item => ({
+            element: item,
+            name: item.querySelector('.songName') ? item.querySelector('.songName').textContent : '',
+            lyrics: item.querySelector('.songLyrics') ? item.querySelector('.songLyrics').textContent : ''
+        }));
     }
+}
 
-    return dp[len1][len2];
+function calculateSimilarity(searchTerm, text) {
+    // Normalize and trim
+    searchTerm = searchTerm.toLowerCase().trim();
+    text = text.toLowerCase().trim();
+
+    // Early return for empty search
+    if (!searchTerm) return 0;
+
+    // Exact match
+    if (text.includes(searchTerm)) return 1;
+
+    // Word-level matching with weighted scoring
+    const searchWords = searchTerm.split(/\s+/);
+    const textWords = text.split(/\s+/);
+
+    // Calculate word matching with prioritization
+    let matchScore = 0;
+    searchWords.forEach(searchWord => {
+        const exactMatch = textWords.some(textWord => textWord === searchWord);
+        const partialMatch = textWords.some(textWord => textWord.includes(searchWord));
+        
+        if (exactMatch) {
+            matchScore += 1; // Exact word match gets full point
+        } else if (partialMatch) {
+            matchScore += 0.5; // Partial match gets half point
+        }
+    });
+
+    // Normalize score
+    return Math.min(matchScore / searchWords.length, 1);
 }
 
 function searchSongs(searchTerm) {
-    const listItems = Array.from(document.querySelectorAll('.songItem'));
-    const results = [];
+    // Ensure original items are cached
+    initializeSearch();
 
-    listItems.forEach(item => {
-        const songNameElement = item.querySelector('.songName');
-        const songLyricsElement = item.querySelector('.songLyrics');
-
-        const songName = songNameElement ? songNameElement.textContent : '';
-        const songLyrics = songLyricsElement ? songLyricsElement.textContent : '';
-
-        const distanceToName = levenshteinDistance(searchTerm, songName);
-        const distanceToLyrics = levenshteinDistance(searchTerm, songLyrics);
-
-        const score = Math.min(distanceToName, distanceToLyrics);
-
-        if (songName || songLyrics) {
-            results.push({ item, score });
-        }
-    });
-
-    results.sort((a, b) => a.score - b.score);
-
+    // Get DOM elements
+    const searchBox = document.getElementById('search-box');
+    const loadingBar = document.getElementById('search-loading-bar');
     const songListItems = document.getElementById('songListItems');
-    songListItems.innerHTML = ''; 
 
-    results.forEach(result => {
-        if (result.score < Infinity) {
+    // Validate search term
+    if (searchTerm.trim().length < 2) {
+        // Reset to show all original items
+        songListItems.innerHTML = '';
+        originalSongItems.forEach(item => {
+            songListItems.appendChild(item.element);
+            item.element.style.display = '';
+        });
+        loadingBar.style.width = '0%';
+        return;
+    }
+
+    // Start loading animation
+    loadingBar.style.transition = 'width 0.3s ease';
+    loadingBar.style.width = '30%';
+
+    // Use setTimeout to prevent blocking
+    setTimeout(() => {
+        const results = [];
+
+        // Search through original items
+        originalSongItems.forEach(item => {
+            const nameScore = calculateSimilarity(searchTerm, item.name);
+            const lyricsScore = calculateSimilarity(searchTerm, item.lyrics);
+
+            // Combine scores with preference to name matches
+            const score = Math.max(nameScore * 1.2, lyricsScore);
+
+            if (score > 0.3) { // Adjust threshold as needed
+                results.push({ item: item.element, score });
+            }
+        });
+
+        // Sort results by score in descending order
+        results.sort((a, b) => b.score - a.score);
+
+        // Clear previous results
+        songListItems.innerHTML = '';
+
+        // Render results
+        results.forEach(result => {
             songListItems.appendChild(result.item);
             result.item.style.display = '';
-        }
-    });
+        });
+
+        // Complete loading bar
+        loadingBar.style.width = '100%';
+        
+        // Reset loading bar after a short delay
+        setTimeout(() => {
+            loadingBar.style.width = '0%';
+        }, 300);
+    }, 0);
 }
 
-const search = document.getElementById('search');
-search.addEventListener('input', () => {
-    const query = document.getElementById('search').value;
+// Debounce function to prevent excessive searching
+function debounce(func, delay) {
+    let timeoutId;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(context, args);
+        }, delay);
+    };
+}
+
+// Setup search input
+const searchInput = document.getElementById('search');
+searchInput.addEventListener('input', debounce(function() {
+    const query = this.value;
     searchSongs(query);
-});
+}, 300)); // 300ms debounce delay
+
+// Initialize search on page load
+document.addEventListener('DOMContentLoaded', initializeSearch);
 
 let file;
-
 function update() {
     if (file) {
         const reader = new FileReader();
