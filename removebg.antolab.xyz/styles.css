@@ -5,6 +5,22 @@ body {
     padding: 20px;
     line-height: 1.6;
 }
+   
+#ghlink {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    margin-top: 25px;
+    font-size: 22px;
+    width: 100%; /* Full width */
+    justify-content: center; /* Center horizontally */
+}
+
+#ghlink h5 {
+    margin: 0; 
+}
 
 .container {
     max-width: 1000px;
