@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix"></script>
+  <title>Background Remover</title>
+  <style>
+    #canvas {
+      border: 1px solid black;
+    }
+    body {
+      background-color: gray;
+    }
+  </style>
+</head>
+<body>
+
+  <input type="file" id="uploadImage" accept="image/*">
+  <button id="processButton">Process</button>
+  
+  <div>
+    <h2>Original Image:</h2>
+    <img id="image">
+  </div>
+  
+  <div>
+    <h2>Image with Background Removed:</h2>
+    <canvas id="out"></canvas>
+  </div>
+  <script>
+    async function loadModel() {
+	const net = await bodyPix.load();
+	return net;
+}
+let backgroundRemoved;
+async function processImage() {
+	const imageElement = document.getElementById('image');
+	const canvas = document.getElementById('out');
+	const ctx = canvas.getContext('2d');
+
+	const width = imageElement.width;
+	const height = imageElement.height;
+	canvas.width = width;
+	canvas.height = height;
+
+	const net = await loadModel();
+	const segmentation = await net.segmentPerson(imageElement);
+	backgroundRemoved = bodyPix.toMask(segmentation);
+
+	ctx.clearRect(0, 0, width, height);
+	ctx.drawImage(imageElement, 0, 0);
+	
+	let imageData = ctx.getImageData(0, 0, width, height);
+	for (i = 0; i < width * height * 4; i += 4) {
+		if (backgroundRemoved.data[i + 3] === 255) {
+			imageData.data[i + 3] = 0;
+		}
+	}
+
+	ctx.putImageData(imageData, 0, 0);
+}
+
+document.getElementById('uploadImage').addEventListener('change', (event) => {
+	const file = event.target.files[0];
+	const reader = new FileReader();
+
+	reader.onload = function (e) {
+		const img = document.getElementById('image');
+		img.onload = function () {
+			processImage(); 
+		};
+		img.src = e.target.result;
+	};
+	reader.readAsDataURL(file);
+});
+  </script>
+</body>
+</html>
