@@ -4,6 +4,8 @@ body {
     margin: 0;
     padding: 20px;
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
 }
    
 #ghlink {
@@ -20,6 +22,14 @@ body {
 
 #ghlink h5 {
     margin: 0; 
+}
+
+#logo {
+    display: block;
+    max-width: 200px; /* Adjust width as needed */
+    max-height: 100px; /* Adjust height as needed */
+    margin: 0 auto 20px; /* Centers the logo horizontally and adds some bottom margin */
+    object-fit: contain; /* Ensures the logo maintains its aspect ratio */
 }
 
 .container {
