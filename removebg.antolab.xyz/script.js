@@ -52,7 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const reader = new FileReader();
         reader.onload = function(e) {
-            originalImage.onload = () => processImage(originalImage);
+            originalImage.onload = () => {
+                            const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = originalImage.naturalWidth;
+                tempCanvas.height = originalImage.naturalHeight;
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                            tempCtx.drawImage(originalImage, 0, 0, tempCanvas.width, tempCanvas.height);
+                
+                processImage(originalImage, tempCanvas);
+            };
             originalImage.src = e.target.result;
         };
         reader.readAsDataURL(file);
@@ -69,26 +78,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function processImage(imageElement) {
+    async function processImage(displayImage, fullResCanvas) {
         try {
             const net = await loadModel();
             if (!net) return;
 
+            const fullWidth = fullResCanvas.width;
+            const fullHeight = fullResCanvas.height;
+
+                    processedCanvas.width = fullWidth;
+            processedCanvas.height = fullHeight;
+
             const ctx = processedCanvas.getContext('2d');
-            const width = imageElement.width;
-            const height = imageElement.height;
 
-            processedCanvas.width = width;
-            processedCanvas.height = height;
-
-            const segmentation = await net.segmentPerson(imageElement);
+            const segmentation = await net.segmentPerson(fullResCanvas);
             const backgroundRemoved = bodyPix.toMask(segmentation);
 
-            ctx.clearRect(0, 0, width, height);
-            ctx.drawImage(imageElement, 0, 0);
+            ctx.clearRect(0, 0, fullWidth, fullHeight);
+            ctx.drawImage(fullResCanvas, 0, 0);
             
-            let imageData = ctx.getImageData(0, 0, width, height);
-            for (let i = 0; i < width * height * 4; i += 4) {
+            let imageData = ctx.getImageData(0, 0, fullWidth, fullHeight);
+            for (let i = 0; i < fullWidth * fullHeight * 4; i += 4) {
                 if (backgroundRemoved.data[i + 3] === 255) {
                     imageData.data[i + 3] = 0;
                 }
