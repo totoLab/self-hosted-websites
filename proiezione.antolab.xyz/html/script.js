@@ -294,7 +294,7 @@ dropZone.addEventListener('click', () => {
 
 const fileList = document.getElementById('fileList');
 const dir = `songbooks`;
-fetch(`${dir}`)
+fetch(`${window.location.href}${dir}`)
     .then(response => {
         if (!response.ok) {
             throw new Error(`Failed to list dir ${dir}: ${response.statusText}`);
