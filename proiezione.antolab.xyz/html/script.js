@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 function processJsonContent(content) {
     content = content.replace(/({|,|\n)([a-zA-Z]+)(:|,)/g, '$1"$2"$3');
 
