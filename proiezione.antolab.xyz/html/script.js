@@ -293,8 +293,10 @@ dropZone.addEventListener('click', () => {
 })
 
 const fileList = document.getElementById('fileList');
+const baseUrl = "https://proiezione.antolab.xyz";
 const dir = `songbooks`;
-fetch(`https://proiezione.antolab.xyz/${dir}`)
+const path = `${baseUrl}/${dir}`;
+fetch(path)
     .then(response => {
         if (!response.ok) {
             throw new Error(`Failed to list dir ${dir}: ${response.statusText}`);
@@ -313,7 +315,7 @@ fetch(`https://proiezione.antolab.xyz/${dir}`)
             listItem.appendChild(fileName);
 
             listItem.onclick = () => {
-                fetch(`${dir}/${file}`)
+                fetch(`${path}/${file}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error(`Failed to load ${file}: ${response.statusText}`);
