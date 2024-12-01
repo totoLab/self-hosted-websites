@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 function processJsonContent(content) {
     content = content.replace(/({|,|\n)([a-zA-Z]+)(:|,)/g, '$1"$2"$3');
 
@@ -292,40 +294,46 @@ dropZone.addEventListener('click', () => {
     fileInput.click();
 })
 
-const files = ["Altri.json", "Grande è il Signore.json", "Inni di Lode.json", "Canta con noi.json", "rcyouth.json"];
 const fileList = document.getElementById('fileList');
+const dir = `songbooks`;
+fetch(`${dir}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Failed to list dir ${dir}: ${response.statusText}`);
+        }
+        response.forEach(block => {
+            const file = block.name;
+            const listItem = document.createElement('li');    
+            const fileName = document.createElement('span');
+            fileName.textContent = file;
+            const image = document.createElement('img');
+            image.src = "icon.png";
+            image.alt = "File Icon";
+            image.width = 40;
+            image.height = 40;
+            listItem.appendChild(image);
+            listItem.appendChild(fileName);
 
-files.forEach(file => {
-    const listItem = document.createElement('li');    
-    const fileName = document.createElement('span');
-    fileName.textContent = file;
-    const image = document.createElement('img');
-    image.src = "icon.png";
-    image.alt = "File Icon";
-    image.width = 40;
-    image.height = 40;
-    listItem.appendChild(image);
-    listItem.appendChild(fileName);
+            listItem.onclick = () => {
+                fetch(`${dir}/${file}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Failed to load ${file}: ${response.statusText}`);
+                        }
+                        return response.text();
+                    })
+                    .then(content => {
+                        search_box.style.display = 'block';
+                        originalSongItems = [];
 
-    listItem.onclick = () => {
-        fetch(`songbooks/${file}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Failed to load ${file}: ${response.statusText}`);
-                }
-                return response.text();
-            })
-            .then(content => {
-                search_box.style.display = 'block';
-                originalSongItems = [];
+                        processContent(content);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        alert(`Could not load file: ${error.message}`);
+                    });
+            };
 
-                processContent(content);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                alert(`Could not load file: ${error.message}`);
-            });
-    };
-
-    fileList.appendChild(listItem);
-});
+            fileList.appendChild(listItem);
+        });
+    });
