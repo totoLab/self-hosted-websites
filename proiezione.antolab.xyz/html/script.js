@@ -294,7 +294,7 @@ dropZone.addEventListener('click', () => {
 
 const fileList = document.getElementById('fileList');
 const dir = `songbooks`;
-fetch(`${window.location.href}${dir}`)
+fetch(`https://proiezione.antolab.xyz/${dir}`)
     .then(response => {
         if (!response.ok) {
             throw new Error(`Failed to list dir ${dir}: ${response.statusText}`);
