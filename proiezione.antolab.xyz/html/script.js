@@ -307,7 +307,7 @@ fetch(path)
             const fileName = document.createElement('span');
             fileName.textContent = file;
             const image = document.createElement('img');
-            image.src = "icon.png";
+            image.src = `${baseUr}/icon.png`;
             image.alt = "File Icon";
             image.width = 40;
             image.height = 40;
