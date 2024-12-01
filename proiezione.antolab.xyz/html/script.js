@@ -308,7 +308,7 @@ files.forEach(file => {
     listItem.appendChild(fileName);
 
     listItem.onclick = () => {
-        fetch(`${file}`)
+        fetch(`songbooks/${file}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Failed to load ${file}: ${response.statusText}`);
