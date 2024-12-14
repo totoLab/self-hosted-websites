@@ -1,4 +1,4 @@
 # Image conversion
 
 - [x] most formats
-- [ ] heic
+- [x] heic
