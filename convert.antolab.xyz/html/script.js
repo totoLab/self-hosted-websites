@@ -158,8 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dataURL = downloadButton.canvas.toDataURL('image/png');
     const link = document.createElement('a');
-    link.download = 'converted_image.png';
-    link.href = dataURL;
-    link.click();
+    if (navigator.userAgent.match(/(iPhone|iPad|iPod)/i)) {
+      const newTab = window.open(dataURL, '_blank');
+      if (!newTab) alert('Please allow pop-ups to download the image.');
+    } else {
+      link.download = 'converted_image.png';
+      link.href = dataURL;
+      link.click();
+    }
   });
 });

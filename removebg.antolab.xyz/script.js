@@ -112,10 +112,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     downloadButton.addEventListener('click', () => {
-        const dataURL = processedCanvas.toDataURL('image/png');
+        if (!downloadButton.canvas) return;
+    
+        const dataURL = downloadButton.canvas.toDataURL('image/png');
         const link = document.createElement('a');
-        link.download = 'background-removed.png';
-        link.href = dataURL;
-        link.click();
-    });
+        if (navigator.userAgent.match(/(iPhone|iPad|iPod)/i)) {
+          const newTab = window.open(dataURL, '_blank');
+          if (!newTab) alert('Please allow pop-ups to download the image.');
+        } else {
+          link.download = 'background-removed.png';
+          link.href = dataURL;
+          link.click();
+        }
+      });
 });
