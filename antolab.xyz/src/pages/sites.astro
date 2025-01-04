@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+type Site = string;
+
+const sites: Site[] = await fetch('https://antolab.xyz/data.json')
+    .then(response => response.json())
+    .catch(() => []);
+---
+<BaseLayout title="Sites - antolab.xyz">
+    <h2>My Services</h2>
+    <ul id="sites">
+        {sites
+            .sort()
+            .filter((site: Site) => site !== '@')
+            .map((site: Site) => (
+                <li>
+                    <a href={`https://${site}.antolab.xyz`}>
+                        {`${site}.antolab.xyz`}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</BaseLayout>

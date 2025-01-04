@@ -1,10 +1,50 @@
 ---
-import Layout from "../layouts/MainLayout.astro";
-
-const domain = "antolab.xyz";
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GithubActivity from '../components/GithubActivity.astro';
+import Projects from '../components/Projects.astro';
 ---
 
-<Layout>
-    <h1>{domain}</h1>
-    <h2>Test build di Astro</h2>
-</Layout>
+<BaseLayout title="antolab.xyz - Home">
+    <h2>Welcome to my Digital Workshop</h2>
+    <section class="content-grid">
+        <div class="content-left">
+            <Projects />
+        </div>
+        <div class="content-right">
+            <GithubActivity />
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+  .content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .content-left,
+  .content-right {
+    background: #fff;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .content-right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content-left {
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

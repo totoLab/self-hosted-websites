@@ -1,15 +1,14 @@
 {
-  "name": "@example/basics",
+  "name": "antolab.xyz",
+  "type": "module",
   "version": "0.0.1",
-  "private": true,
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build && cp -r dist html",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^1.9.2"
+    "astro": "^5.1.2"
   }
 }

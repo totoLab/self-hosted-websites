@@ -1,0 +1,66 @@
+---
+const GITHUB_USERNAME = 'totoLab';
+
+let projects = [];
+let recentActivities = [];
+
+try {
+  // Fetch a limited number of projects at build time or during server rendering
+  const projectsResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`);
+
+  if (projectsResponse.ok) {
+    const allProjects = await projectsResponse.json();
+
+    // Order projects by stargazers_count and forks_count, then slice to get top 9
+    projects = allProjects
+      .sort((a, b) => {
+        if (b.stargazers_count !== a.stargazers_count) {
+          return b.stargazers_count - a.stargazers_count;
+        }
+        return b.forks_count - a.forks_count;
+      })
+      .slice(0, 9);
+  } else if (projectsResponse.status === 403) {
+    console.error('GitHub API rate limit exceeded while fetching projects.');
+  } else {
+    console.error('Failed to fetch projects:', projectsResponse.status);
+  }
+
+  // Fetch recent GitHub activities
+  const activitiesResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public`);
+
+  if (activitiesResponse.ok) {
+    const activities = await activitiesResponse.json();
+
+    if (Array.isArray(activities)) {
+      recentActivities = activities.slice(0, 10);
+    } else {
+      console.error('Unexpected format for activities data:', activities);
+    }
+  } else if (activitiesResponse.status === 403) {
+    console.error('GitHub API rate limit exceeded while fetching activities.');
+  } else {
+    console.error('Failed to fetch activities:', activitiesResponse.status);
+  }
+} catch (error) {
+  console.error('An error occurred while fetching data:', error);
+}
+---
+
+<div class="github-activity">
+  <h3>Recent GitHub Activity</h3>
+  <ul>
+    {recentActivities.length > 0 ? (
+      recentActivities.map(activity => (
+        <li key={activity.id}>
+          {activity.type === 'PushEvent' && 
+            `Pushed to ${activity.repo.name}`}
+          {activity.type === 'CreateEvent' && 
+            `Created ${activity.payload.ref_type} in ${activity.repo.name}`}
+        </li>
+      ))
+    ) : (
+      <p>No recent activity found or an error occurred.</p>
+    )}
+  </ul>
+</div>
