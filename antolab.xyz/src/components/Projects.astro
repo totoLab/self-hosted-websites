@@ -2,10 +2,11 @@
 const GITHUB_USERNAME = 'totoLab';
 
 let projects = [];
+const proxyUrl = "https://api.antolab.xyz/github-totolab"
 
 try {
   // Fetch a limited number of projects at build time or during server rendering
-  const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`);
+  const response = await fetch(`${proxyUrl}/repos`);
   
   if (response.ok) {
     const allProjects = await response.json();

@@ -1,12 +1,12 @@
 ---
-const GITHUB_USERNAME = 'totoLab';
 
 let projects = [];
 let recentActivities = [];
+const proxyUrl = "https://api.antolab.xyz/github-totolab"
 
 try {
   // Fetch a limited number of projects at build time or during server rendering
-  const projectsResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`);
+  const projectsResponse = await fetch(`${proxyUrl}/repos`);
 
   if (projectsResponse.ok) {
     const allProjects = await projectsResponse.json();
@@ -27,7 +27,7 @@ try {
   }
 
   // Fetch recent GitHub activities
-  const activitiesResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public`);
+  const activitiesResponse = await fetch(`${proxyUrl}/events/public`);
 
   if (activitiesResponse.ok) {
     const activities = await activitiesResponse.json();
