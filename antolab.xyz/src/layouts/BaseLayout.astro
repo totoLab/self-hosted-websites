@@ -1,4 +1,5 @@
 ---
+import ThemeToggle from '../components/ThemeToggle.astro';
 const { title } = Astro.props;
 ---
 
@@ -11,6 +12,25 @@ const { title } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+    
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    
+      window.localStorage.setItem('theme', theme);
+    </script>
   </head>
   <body>
     <header class="header">
@@ -34,12 +54,13 @@ const { title } = Astro.props;
             Linkedin
           </a>
           <a href="https://github.com/totoLab" 
-          class="nav-link github-link" 
-          target="_blank" 
-          rel="noopener noreferrer">
-          GitHub
-        </a>
-        <a href="/contact" class="nav-link">Contact</a>
+             class="nav-link github-link" 
+             target="_blank" 
+             rel="noopener noreferrer">
+            GitHub
+          </a>
+          <a href="/contact" class="nav-link">Contact</a>
+          <ThemeToggle />
         </div>
       </nav>
     </header>
@@ -52,7 +73,7 @@ const { title } = Astro.props;
 
 <style is:global>
   :root {
-    /* Colors */
+    /* Light theme colors */
     --primary-color: #2563eb;
     --secondary-color: #1e40af;
     --text-primary: #1f2937;
@@ -72,10 +93,25 @@ const { title } = Astro.props;
     --max-width: 1280px;
   }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  /* Dark theme colors */
+  :root.dark {
+    --primary-color: #60a5fa;
+    --secondary-color: #3b82f6;
+    --text-primary: #f9fafb;
+    --text-secondary: #e5e7eb;
+    --background-light: #1f2937;
+    --background-white: #111827;
+    --border-color: #374151;
+    --header-bg: #111827;
+    --header-shadow: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Add transition to all elements that use theme variables */
+  *, *::before, *::after {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
   }
 
   body {
@@ -84,9 +120,7 @@ const { title } = Astro.props;
     background-color: var(--background-light);
     line-height: 1.5;
   }
-</style>
 
-<style>
   .header {
     background-color: var(--header-bg);
     border-bottom: 1px solid var(--border-color);
@@ -95,6 +129,7 @@ const { title } = Astro.props;
     z-index: 100;
     box-shadow: 0 1px 2px var(--header-shadow);
   }
+
 
   .nav-container {
     max-width: var(--max-width);
