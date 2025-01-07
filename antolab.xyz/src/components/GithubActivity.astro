@@ -1,31 +1,10 @@
 ---
 
-let projects = [];
-let recentActivities = [];
+let includedActivities = [];
 const proxyUrl = "https://api.antolab.xyz/github-totolab"
+const keywordsToExclude: String[] = [];
 
 try {
-  // Fetch a limited number of projects at build time or during server rendering
-  const projectsResponse = await fetch(`${proxyUrl}/repos`);
-
-  if (projectsResponse.ok) {
-    const allProjects = await projectsResponse.json();
-
-    // Order projects by stargazers_count and forks_count, then slice to get top 9
-    projects = allProjects
-      .sort((a, b) => {
-        if (b.stargazers_count !== a.stargazers_count) {
-          return b.stargazers_count - a.stargazers_count;
-        }
-        return b.forks_count - a.forks_count;
-      })
-      .slice(0, 9);
-  } else if (projectsResponse.status === 403) {
-    console.error('GitHub API rate limit exceeded while fetching projects.');
-  } else {
-    console.error('Failed to fetch projects:', projectsResponse.status);
-  }
-
   // Fetch recent GitHub activities
   const activitiesResponse = await fetch(`${proxyUrl}/events/public`);
 
@@ -33,7 +12,20 @@ try {
     const activities = await activitiesResponse.json();
 
     if (Array.isArray(activities)) {
-      recentActivities = activities.slice(0, 10);
+      const result = activities.filter(item =>
+        !keywordsToExclude.some(keyword => item.repo.name.includes(keyword))
+      );
+      const seen = new Set();
+
+      for (const item of result) {
+        const uniqueKey = `${item.repo.name}-${item.type}`;
+        if (!seen.has(uniqueKey)) {
+          seen.add(uniqueKey);
+          includedActivities.push(item);
+        }
+      }
+      includedActivities.slice(0, 10);
+      console.log(includedActivities)
     } else {
       console.error('Unexpected format for activities data:', activities);
     }
@@ -50,13 +42,15 @@ try {
 <div class="github-activity">
   <h3>Recent GitHub Activity</h3>
   <ul>
-    {recentActivities.length > 0 ? (
-      recentActivities.map(activity => (
-        <li key={activity.id}>
+    {includedActivities.length > 0 ? (
+      includedActivities.map(activity => (
+        <li>
           {activity.type === 'PushEvent' && 
             `Pushed to ${activity.repo.name}`}
           {activity.type === 'CreateEvent' && 
             `Created ${activity.payload.ref_type} in ${activity.repo.name}`}
+          {activity.type === 'WatchEvent' &&
+            `Starred ${activity.repo.name} repository`}
         </li>
       ))
     ) : (
