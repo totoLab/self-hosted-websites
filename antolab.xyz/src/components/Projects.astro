@@ -1,7 +1,7 @@
 ---
 const GITHUB_USERNAME = 'totoLab';
 
-let projects = [];
+let projects: any = [];
 const proxyUrl = "https://api.antolab.xyz/github-totolab"
 
 try {
@@ -13,13 +13,19 @@ try {
 
     // Order projects by stargazers_count and forks_count, then slice to get top 9
     projects = allProjects
-      .sort((a, b) => {
+      .sort((a: any, b: any) => {
         if (b.stargazers_count !== a.stargazers_count) {
           return b.stargazers_count - a.stargazers_count;
         }
-        return b.forks_count - a.forks_count;
+        if (b.forks_count !== a.forks_count) {
+          return b.forks_count - a.forks_count;
+        }
+        const bDate = new Date(b.updated_at);
+        const aDate = new Date(a.updated_at);
+        if (bDate === aDate) return 0;
+        return bDate > aDate ? 1 : -1;
       })
-      .slice(0, 9);
+      .slice(0, 12);
   } else if (response.status === 403) {
     console.error('GitHub API rate limit exceeded.');
   } else {
