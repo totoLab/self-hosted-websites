@@ -29,6 +29,7 @@ console.log(sites)
     <ul id="sites">
         {sites
           .filter((site: Site) => site.subdomain !== '@')
+          .sort((a: Site, b: Site) => a.subdomain.localeCompare(b.subdomain))
           .map((site: Site) => (
             <li>
                 <a href={`https://${site.subdomain}.antolab.xyz`}>
