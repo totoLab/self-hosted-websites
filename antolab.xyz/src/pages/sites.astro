@@ -1,25 +1,48 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-type Site = string;
+type Site = {
+  subdomain: string,
+  icon: string
+};
 
-const sites: Site[] = await fetch('https://antolab.xyz/data.json')
-    .then(response => response.json())
-    .catch(() => []);
+const icons = await fetch('https://antolab.xyz/icons.json')
+  .then(response => response.json())
+  .catch(() => {});
+
+const subdomains = await fetch('https://antolab.xyz/data.json')
+  .then(response => response.json())
+  .catch(() => []);
+
+const sites: Site[] = subdomains.map((element: string) => {
+  const iconUrl = icons[element] || ''; // Safely access the icon URL
+  return {
+    subdomain: element,
+    icon: iconUrl,
+  };
+});
+
+console.log(sites)
 ---
 <BaseLayout title="Sites - antolab.xyz">
     <h2>My Services</h2>
     <ul id="sites">
         {sites
-            .sort()
-            .filter((site: Site) => site !== '@')
-            .map((site: Site) => (
-                <li>
-                    <a href={`https://${site}.antolab.xyz`}>
-                        {`${site}.antolab.xyz`}
-                    </a>
-                </li>
-            ))
+          .filter((site: Site) => site.subdomain !== '@')
+          .map((site: Site) => (
+            <li>
+                <a href={`https://${site.subdomain}.antolab.xyz`}>
+                {site.icon && ( // Render <img> tag only if site.icon is not empty
+                  <img 
+                    src={site.icon} 
+                    alt={`${site.subdomain} icon`} 
+                    class="site-icon" 
+                  />
+                )}
+                {`${site.subdomain}.antolab.xyz`}
+              </a>
+            </li>
+          ))
         }
     </ul>
 </BaseLayout>
@@ -40,6 +63,9 @@ const sites: Site[] = await fetch('https://antolab.xyz/data.json')
     border-radius: var(--radius-default);
     box-shadow: 0 1px 3px var(--header-shadow);
     transition: var(--transition-default);
+    display: flex;
+    align-items: center;
+    padding: 1rem;
   }
 
   #sites li:hover {
@@ -48,18 +74,30 @@ const sites: Site[] = await fetch('https://antolab.xyz/data.json')
   }
 
   #sites li a {
-    display: block;
-    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     text-decoration: none;
     color: var(--text-primary);
     font-weight: 500;
-    text-align: center;
     font-size: 0.875rem;
     transition: color 0.3s ease;
   }
 
   #sites li a:hover {
     color: var(--primary-color);
+  }
+
+  .site-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-default);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: var(--transition-default);
+  }
+
+  .site-icon:hover {
+    transform: scale(1.1);
   }
 
   h2 {
@@ -74,14 +112,34 @@ const sites: Site[] = await fetch('https://antolab.xyz/data.json')
       gap: 0.75rem;
     }
 
+    #sites li {
+      padding: 0.75rem;
+    }
+
     #sites li a {
       font-size: 0.8125rem;
+    }
+
+    .site-icon {
+      width: 20px;
+      height: 20px;
     }
   }
 
   @media (max-width: 640px) {
+    #sites li {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
     #sites li a {
-      padding: 0.75rem;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .site-icon {
+      margin-bottom: 0.5rem;
     }
   }
 </style>
