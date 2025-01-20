@@ -25,3 +25,4 @@ pnpm-debug.log*
 
 # served files
 data.json
+icons.json
