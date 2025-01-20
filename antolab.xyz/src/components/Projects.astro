@@ -5,6 +5,8 @@ let projects: any[] = [];
 const proxyUrl = "https://api.antolab.xyz/github-totolab"
 const keywordsToExclude: any[] = ["upptime", "projectBible", "studyMaterial", "automatic-tiktok-yt-channel", "ytSubs", "tomcat-axis2"];
 
+const { elementsShow = -1 } = Astro.props;
+const shownProjects = Number.parseInt(elementsShow)
 try {
   // Fetch a limited number of projects at build time or during server rendering
   const response = await fetch(`${proxyUrl}/repos`);
@@ -12,7 +14,7 @@ try {
   if (response.ok) {
     const allProjects = await response.json();
     if (Array.isArray(allProjects)) {
-      projects = allProjects
+      let filteredProjects = allProjects
         .filter(project =>
           !keywordsToExclude.some(keyword => project.name.includes(keyword))
         )
@@ -27,7 +29,16 @@ try {
           const aDate = new Date(a.updated_at);
           if (bDate === aDate) return 0;
           return bDate > aDate ? 1 : -1;
-        })
+        });
+
+      if (shownProjects === -1) {
+        projects = filteredProjects; // Show all projects
+      } else if (shownProjects > 0) {
+        projects = filteredProjects.slice(0, shownProjects); // Show limited projects
+      } else {
+        projects = []; // Handle invalid cases (optional)
+      }
+
     } else {
       console.error('Unexpected format for projects data:', allProjects);
     }
@@ -42,7 +53,9 @@ try {
 ---
 
 <section class="projects">
-  <h2 class="section-title">Featured Projects</h2>
+  <a href="/project">
+    <h2 class="section-title">Featured Projects</h2>
+  </a>
   <div class="projects-grid">
     {projects.length > 0 ? (
       projects.map(project => (
