@@ -18,30 +18,39 @@ import Projects from '../components/Projects.astro';
 
 <style>
   .content-grid {
+    margin-top: 15px;
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 1rem;
-    padding: 1rem;
+    gap: clamp(0.5rem, 2vw, 1rem);
+    padding: clamp(0.5rem, 2vw, 1rem);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
-
+  
   .content-left,
   .content-right {
     background: var(--background-white);
-    padding: 1rem;
+    padding: clamp(0.5rem, 2vw, 1rem);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-default);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-
-  .content-right {
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;  /* Prevent horizontal scroll */
+    box-sizing: border-box;
   }
 
   @media (max-width: 768px) {
     .content-grid {
-      grid-template-columns: 1fr;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.25rem;  /* Even smaller padding */
+    }
+    
+    .content-left,
+    .content-right {
+      padding: 0.5rem;  /* Smaller padding on mobile */
     }
   }
 </style>

@@ -61,6 +61,8 @@ try {
 <style>
   .github-activity {
     padding: 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .github-activity h3 {
@@ -90,5 +92,15 @@ try {
 
   .github-activity li:hover {
     background-color: var(--background-light);
+  }
+
+  @media (max-width: 768px) {
+      .github-activity {
+          padding: 0.75rem;
+      }
+      
+      .github-activity h3 {
+          font-size: 1.25rem;
+      }
   }
 </style>
