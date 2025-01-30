@@ -1,0 +1,48 @@
+---
+import '../styles/global.css';
+
+const routes = [
+  {
+    name: "Calendario RCY Team Media",
+	  url: "/schedule",
+    icon: "/schedule/logo.png"
+  },
+  {
+    name: "Domande Conversazione",
+	url: "/domande",
+    icon: "/domande/domande.png"
+  },
+  {
+    name: "Canti Proiettore",
+	url: "/proiettore",
+    icon: "/proiettore/logo.png"
+  }
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popular Routes</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Links</h1>
+        </header>
+        <main class="grid-container">
+            {routes.map(route => (
+                <a href={`${route.url}`} class="grid-item">
+                    <div class="icon-container">
+                        <img src={route.icon} alt={`${route.name} icon`} />
+                    </div>
+                    <h2>{route.name}</h2>
+                    {route.description && <p>{route.description}</p>}
+                </a>
+            ))}
+        </main>
+    </div>
+</body>
+</html>

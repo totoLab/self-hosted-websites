@@ -1,0 +1,85 @@
+---
+import '../styles/global.css';
+
+function processJsonContent(content) {
+  content = content.replace(/({|,|\n)([a-zA-Z]+)(:|,)/g, '$1"$2"$3');
+
+  const pattern = /"Text":"(.*?)"}/gs;
+
+  function replaceNewlinesAndEscapeQuotes(match, p1) {
+    let content = p1;
+
+    content = content.replace(/(?<!\\)"/g, '\\"');
+    content = content.replace(/\n/g, '\\n');
+
+    return `"Text":"${content}"}`;
+  }
+
+  content = content.replace(pattern, replaceNewlinesAndEscapeQuotes);
+  content = content.replace(/[\u001f-\u001f\u007f\uFEFF]/g, '');
+  content = content.replace(/[“”‘’‹›«»“”]/g, '\\"');
+  content = content.replace(/\u2026/g, '...');
+  content = content.replace(/\u0300/g, '\'');
+  content = content.replace(/\u00d7/g, 'x');
+  content = content.replace(/\t/g, '');
+
+  return content;
+}
+
+async function fetchAndProcessContent() {
+  try {
+    const response = await fetch(`https://rcy.antolab.xyz/songbooks/rcyouth.json`);
+    if (!response.ok) {
+      throw new Error(`Failed to load JSON file: ${response.statusText}`);
+    }
+
+    const content = await response.text();
+    const processedContent = processJsonContent(content);
+
+    const parsedContent = JSON.parse(processedContent);
+    if (Array.isArray(parsedContent.Songs)) {
+      return parsedContent.Songs[0].Verses;
+    } else {
+      throw new Error('Invalid song data format.');
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+    return 'Error loading content.';
+  }
+}
+
+const text: Array<any> = await fetchAndProcessContent();
+const domande: Array<string> = [] 
+text.forEach((element: any) => {
+    const multi = element.Text;
+    multi.split("\n").map((item: string) => 
+    domande.push(item.replace(/^-/, '').trim())
+  );
+
+});
+
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RCY Songbook</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Domande anonime RCY</h1>
+        </header>
+        <main>
+            <div class="song-container">
+                <ul>
+                    {domande.map((item: string) =>
+                        <li>{item}</li>
+                    )}
+                </ul>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
