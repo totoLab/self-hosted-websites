@@ -1,6 +1,5 @@
 *.py
-src
 out
 SongBooks
-*.json
 test*
+chars.json
