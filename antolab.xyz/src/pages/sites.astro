@@ -6,11 +6,11 @@ type Site = {
   icon: string
 };
 
-const icons = await fetch('https://antolab.xyz/icons.json')
+const icons = await fetch('https://antolab.net/icons.json')
   .then(response => response.json())
   .catch(() => {});
 
-const subdomains = await fetch('https://antolab.xyz/data.json')
+const subdomains = await fetch('https://antolab.net/data.json')
   .then(response => response.json())
   .catch(() => []);
 
@@ -23,7 +23,7 @@ const sites: Site[] = subdomains.map((element: string) => {
 });
 
 ---
-<BaseLayout title="Sites - antolab.xyz">
+<BaseLayout title="Sites - antolab.net">
     <h2>My Services</h2>
     <ul id="sites">
         {sites
@@ -31,7 +31,7 @@ const sites: Site[] = subdomains.map((element: string) => {
           .sort((a: Site, b: Site) => a.subdomain.localeCompare(b.subdomain))
           .map((site: Site) => (
             <li>
-                <a href={`https://${site.subdomain}.antolab.xyz`}>
+                <a href={`https://${site.subdomain}.antolab.net`}>
                 {site.icon && ( // Render <img> tag only if site.icon is not empty
                   <img 
                     src={site.icon} 
@@ -39,7 +39,7 @@ const sites: Site[] = subdomains.map((element: string) => {
                     class="site-icon" 
                   />
                 )}
-                {`${site.subdomain}.antolab.xyz`}
+                {`${site.subdomain}.antolab.net`}
               </a>
             </li>
           ))

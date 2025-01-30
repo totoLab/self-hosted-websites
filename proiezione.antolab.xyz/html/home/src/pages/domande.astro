@@ -28,7 +28,7 @@ function processJsonContent(content) {
 
 async function fetchAndProcessContent() {
   try {
-    const response = await fetch(`https://rcy.antolab.xyz/songbooks/rcyouth.json`);
+    const response = await fetch(`https://rcy.antolab.net/songbooks/rcyouth.json`);
     if (!response.ok) {
       throw new Error(`Failed to load JSON file: ${response.statusText}`);
     }
