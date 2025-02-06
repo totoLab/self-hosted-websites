@@ -1,82 +1,90 @@
 ---
-const GITHUB_USERNAME = 'totoLab';
 
-let projects: any[] = [];
-const proxyUrl = "https://api.antolab.net/github-totolab"
-const keywordsToExclude: any[] = ["upptime", "projectBible", "studyMaterial", "automatic-tiktok-yt-channel", "ytSubs", "tomcat-axis2"];
+---
 
-const { elementsShow = -1 } = Astro.props;
-const shownProjects = Number.parseInt(elementsShow)
-try {
-  // Fetch a limited number of projects at build time or during server rendering
-  const response = await fetch(`${proxyUrl}/repos`);
-  
-  if (response.ok) {
-    const allProjects = await response.json();
-    if (Array.isArray(allProjects)) {
+<section class="projects">
+  <h2 class="section-title">Featured Projects</h2>
+  <div class="projects-grid" id="projects-container">
+    <p>Loading projects...</p>
+  </div>
+</section>
+
+<script>
+  const proxyUrl = "https://api.antolab.net/github-totolab";
+  const keywordsToExclude = [
+        "upptime",
+        "projectBible",
+        "studyMaterial",
+        "automatic-tiktok-yt-channel",
+        "ytSubs",
+        "tomcat-axis2"
+      ];
+
+  async function fetchProjects() {
+    try {
+      const response = await fetch(`${proxyUrl}/repos`);
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error("GitHub API rate limit exceeded.");
+        }
+        throw new Error(`Failed to fetch projects: ${response.status}`);
+      }
+
+      const allProjects = await response.json();
+      if (!Array.isArray(allProjects)) {
+        throw new Error("Unexpected format for projects data.");
+      }
+
+      // Filter and sort projects
       let filteredProjects = allProjects
-        .filter(project =>
-          !keywordsToExclude.some(keyword => project.name.includes(keyword))
-        )
-        .sort((a: any, b: any) => {
+        .filter((project) => !keywordsToExclude.some((keyword) => project.name.includes(keyword)))
+        .sort((a, b) => {
           if (b.stargazers_count !== a.stargazers_count) {
             return b.stargazers_count - a.stargazers_count;
           }
           if (b.forks_count !== a.forks_count) {
             return b.forks_count - a.forks_count;
           }
-          const bDate = new Date(b.updated_at);
-          const aDate = new Date(a.updated_at);
-          if (bDate === aDate) return 0;
-          return bDate > aDate ? 1 : -1;
+          return new Date(b.updated_at) - new Date(a.updated_at);
         });
 
-      if (shownProjects === -1) {
-        projects = filteredProjects; // Show all projects
-      } else if (shownProjects > 0) {
-        projects = filteredProjects.slice(0, shownProjects); // Show limited projects
-      } else {
-        projects = []; // Handle invalid cases (optional)
-      }
-
-    } else {
-      console.error('Unexpected format for projects data:', allProjects);
+      displayProjects(filteredProjects);
+    } catch (error) {
+      console.error("Error fetching projects:", error.message);
+      document.getElementById("projects-container").innerHTML = "<p>Failed to load projects.</p>";
     }
-  } else if (response.status === 403) {
-    console.error('GitHub API rate limit exceeded.');
-  } else {
-    console.error('Failed to fetch projects:', response.status);
   }
-} catch (error) {
-  console.error('An error occurred while fetching projects:', error);
-}
----
 
-<section class="projects">
-  <a href="/project">
-    <h2 class="section-title">Featured Projects</h2>
-  </a>
-  <div class="projects-grid">
-    {projects.length > 0 ? (
-      projects.map(project => (
-        <div class="project-card" key={project.id}>
+  function displayProjects(projects) {
+    const container = document.getElementById("projects-container");
+
+    if (!projects.length) {
+      container.innerHTML = "<p>No projects found.</p>";
+      return;
+    }
+
+    container.innerHTML = projects
+      .map(
+        (project) => `
+        <div class="project-card">
           <h3 class="project-title">
-            <a href={project.html_url} target="_blank" rel="noopener noreferrer">{project.name}</a>
+            <a href="${project.html_url}" target="_blank" rel="noopener noreferrer">${project.name}</a>
           </h3>
-          <p class="project-description">{project.description || 'No description available.'}</p>
+          <p class="project-description">${project.description || "No description available."}</p>
           <div class="project-meta">
-            <span>⭐ {project.stargazers_count}</span>
-            <span>🍴 {project.forks_count}</span>
+            <span>⭐ ${project.stargazers_count}</span>
+            <span>🍴 ${project.forks_count}</span>
           </div>
         </div>
-      ))
-    ) : (
-      <p>No projects found or an error occurred.</p>
-    )}
-  </div>
-</section>
+      `
+      )
+      .join("");
+  }
 
-<style>
+  fetchProjects();
+</script>
+
+<style global>
   .projects {
     padding: 2rem;
     background-color: var(--background-light);

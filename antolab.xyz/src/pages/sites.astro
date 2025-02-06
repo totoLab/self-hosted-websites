@@ -1,51 +1,52 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-type Site = {
-  subdomain: string,
-  icon: string
-};
-
-const icons = await fetch('https://antolab.net/icons.json')
-  .then(response => response.json())
-  .catch(() => {});
-
-const subdomains = await fetch('https://antolab.net/data.json')
-  .then(response => response.json())
-  .catch(() => []);
-
-const sites: Site[] = subdomains.map((element: string) => {
-  const iconUrl = icons[element] || ''; // Safely access the icon URL
-  return {
-    subdomain: element,
-    icon: iconUrl,
-  };
-});
-
 ---
 <BaseLayout title="Sites - antolab.net">
-    <h2>My Services</h2>
-    <ul id="sites">
-        {sites
-          .filter((site: Site) => site.subdomain !== '@')
-          .sort((a: Site, b: Site) => a.subdomain.localeCompare(b.subdomain))
-          .map((site: Site) => (
+  <h2>My Services</h2>
+  <ul id="sites">
+    <p>Loading services...</p>
+  </ul>
+</BaseLayout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const sitesList = document.getElementById("sites");
+
+    try {
+      const [icons, subdomains] = await Promise.all([
+        fetch("/icons.json").then((res) => res.json()).catch(() => ({})),
+        fetch("/data.json").then((res) => res.json()).catch(() => [])
+      ]);
+
+      const sites = subdomains
+        .filter(subdomain => subdomain !== "@") // Exclude '@' subdomain
+        .map(subdomain => ({
+          subdomain,
+          icon: icons[subdomain] || "" // Safely access the icon URL
+        }))
+        .sort((a, b) => a.subdomain.localeCompare(b.subdomain));
+
+      if (sites.length > 0) {
+        sitesList.innerHTML = sites
+          .map(site => `
             <li>
-                <a href={`https://${site.subdomain}.antolab.net`}>
-                {site.icon && ( // Render <img> tag only if site.icon is not empty
-                  <img 
-                    src={site.icon} 
-                    alt={`${site.subdomain} icon`} 
-                    class="site-icon" 
-                  />
-                )}
-                {`${site.subdomain}.antolab.net`}
+              <a href="https://${site.subdomain}.antolab.net">
+                ${site.icon ? `<img src="${site.icon}" alt="${site.subdomain} icon" class="site-icon" />` : ""}
+                ${site.subdomain}.antolab.net
               </a>
             </li>
-          ))
-        }
-    </ul>
-</BaseLayout>
+          `)
+          .join("");
+      } else {
+        sitesList.innerHTML = "<p>No services found.</p>";
+      }
+    } catch (error) {
+      console.error("Error fetching sites data:", error);
+      sitesList.innerHTML = "<p>Failed to load services.</p>";
+    }
+  });
+</script>
 
 <style is:global>
   #sites {
