@@ -1,63 +1,6 @@
 ---
 import '../styles/global.css';
 
-function processJsonContent(content) {
-  content = content.replace(/({|,|\n)([a-zA-Z]+)(:|,)/g, '$1"$2"$3');
-
-  const pattern = /"Text":"(.*?)"}/gs;
-
-  function replaceNewlinesAndEscapeQuotes(match, p1) {
-    let content = p1;
-
-    content = content.replace(/(?<!\\)"/g, '\\"');
-    content = content.replace(/\n/g, '\\n');
-
-    return `"Text":"${content}"}`;
-  }
-
-  content = content.replace(pattern, replaceNewlinesAndEscapeQuotes);
-  content = content.replace(/[\u001f-\u001f\u007f\uFEFF]/g, '');
-  content = content.replace(/[“”‘’‹›«»“”]/g, '\\"');
-  content = content.replace(/\u2026/g, '...');
-  content = content.replace(/\u0300/g, '\'');
-  content = content.replace(/\u00d7/g, 'x');
-  content = content.replace(/\t/g, '');
-
-  return content;
-}
-
-async function fetchAndProcessContent() {
-  try {
-    const response = await fetch(`https://rcy.antolab.net/songbooks/rcyouth.json`);
-    if (!response.ok) {
-      throw new Error(`Failed to load JSON file: ${response.statusText}`);
-    }
-
-    const content = await response.text();
-    const processedContent = processJsonContent(content);
-
-    const parsedContent = JSON.parse(processedContent);
-    if (Array.isArray(parsedContent.Songs)) {
-      return parsedContent.Songs[0].Verses;
-    } else {
-      throw new Error('Invalid song data format.');
-    }
-  } catch (error) {
-    console.error('Error:', error.message);
-    return 'Error loading content.';
-  }
-}
-
-const text: Array<any> = await fetchAndProcessContent();
-const domande: Array<string> = [] 
-text.forEach((element: any) => {
-    const multi = element.Text;
-    multi.split("\n").map((item: string) => 
-    domande.push(item.replace(/^-/, '').trim())
-  );
-
-});
-
 ---
 
 <html lang="en">
@@ -74,12 +17,82 @@ text.forEach((element: any) => {
         <main>
             <div class="song-container">
                 <ul>
-                    {domande.map((item: string) =>
-                        <li>{item}</li>
-                    )}
+                    
                 </ul>
             </div>
         </main>
     </div>
 </body>
 </html>
+
+<script>
+  function processJsonContent(content) {
+    content = content.replace(/({|,|\n)([a-zA-Z]+)(:|,)/g, '$1"$2"$3');
+
+    const pattern = /"Text":"(.*?)"}/gs;
+
+    function replaceNewlinesAndEscapeQuotes(match, p1) {
+      let content = p1;
+
+      content = content.replace(/(?<!\\)"/g, '\\"');
+      content = content.replace(/\n/g, '\\n');
+
+      return `"Text":"${content}"}`;
+    }
+
+    content = content.replace(pattern, replaceNewlinesAndEscapeQuotes);
+    content = content.replace(/[\u001f-\u001f\u007f\uFEFF]/g, '');
+    content = content.replace(/[“”‘’‹›«»“”]/g, '\\"');
+    content = content.replace(/\u2026/g, '...');
+    content = content.replace(/\u0300/g, '\'');
+    content = content.replace(/\u00d7/g, 'x');
+    content = content.replace(/\t/g, '');
+
+    return content;
+  }
+
+  async function fetchAndProcessContent() {
+    try {
+      const response = await fetch(`https://rcy.antolab.net/songbooks/rcyouth.json`);
+      if (!response.ok) {
+        throw new Error(`Failed to load JSON file: ${response.statusText}`);
+      }
+
+      const content = await response.text();
+      const processedContent = processJsonContent(content);
+
+      const parsedContent = JSON.parse(processedContent);
+      if (Array.isArray(parsedContent.Songs)) {
+        return parsedContent.Songs[0].Verses;
+      } else {
+        throw new Error('Invalid song data format.');
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+      return [];
+    }
+  }
+
+  async function displayDomande() {
+    const text = await fetchAndProcessContent();
+    const domande = [];
+
+    text.forEach((element) => {
+      const multi = element.Text;
+      multi.split("\n").forEach((item) => {
+        domande.push(item.replace(/^-/, '').trim());
+      });
+    });
+
+    const ulElement = document.querySelector(".song-container ul");
+    if (ulElement) {
+      domande.forEach((domanda) => {
+        const li = document.createElement("li");
+        li.textContent = domanda;
+        ulElement.appendChild(li);
+      });
+    }
+  }
+
+  displayDomande();
+</script>
