@@ -101,7 +101,7 @@ const { title } = Astro.props;
     
     /* Other */
     --radius-default: 0.5rem;
-    --transition-default: all 0.2s ease-in-out;
+    --transition-default: all 0.3s ease-in-out;
     --max-width: min(1280px, 100vw - 2rem);
 
     --content-max-width: min(100%, var(--max-width));
@@ -122,10 +122,10 @@ const { title } = Astro.props;
 
   /* Add transition to all elements that use theme variables */
   *, *::before, *::after {
-    transition: background-color 0.3s ease,
-                color 0.3s ease,
-                border-color 0.3s ease,
-                box-shadow 0.3s ease;
+    transition: background-color 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
   }
 
   body {
