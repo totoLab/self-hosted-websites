@@ -5,7 +5,16 @@ import Projects from '../components/Projects.astro';
 ---
 
 <BaseLayout title="Home - antolab.net">
-    <h2>Welcome to my Digital Workshop</h2>
+    <div class="welcome">
+      <h2>Welcome to my Digital Workshop</h2>
+      <section class="about-me">
+        <p>
+          I'm Antonio, BSc in Computer Engineering and software developer.
+          Here you'll find my portfolio, latest updates on my projects and ways to connect with me.
+        </p>
+        <p>Want to collaborate or just say hi? <a href="/contact">Get in touch</a>.</p>
+      </section>
+    </div>
     <section class="content-grid">
         <div class="content-left">
           <Projects elementsShow="6"/>
@@ -18,8 +27,17 @@ import Projects from '../components/Projects.astro';
 </BaseLayout>
 
 <style>
-  .content-grid {
+  .welcome {
+    padding: clamp(0.5rem, 2vw, 1rem);
+  }
+
+  .about-me {
     margin-top: 15px;
+    border-radius: var(--radius-default);
+    text-align: justify;
+  }
+
+  .content-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: clamp(0.5rem, 2vw, 1rem);
