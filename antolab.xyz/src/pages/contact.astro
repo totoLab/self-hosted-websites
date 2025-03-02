@@ -2,8 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Contact - antolab.net">
-    <h2>Get in Touch</h2>
     <div class="contact-methods">
+        <h2>Contact me!</h2>
+        <p class="contact-intro">I'm always open to new opportunities, collaborations, or just a friendly chat. Feel free to reach out through any of the following channels.</p>
         <div class="method">
             <h3>Professional Inquiries</h3>
             <p>For collaboration or business inquiries:</p>
@@ -16,3 +17,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
     </div>
 </BaseLayout>
+
+<style>
+    .contact-methods {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .contact-methods div {
+        margin-bottom: 1rem;
+    }
+
+    .contact-intro {
+        margin: 1.5rem 0;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        max-width: 700px;
+    }
+    
+    /* The rest of the CSS from above would go here */
+</style>
