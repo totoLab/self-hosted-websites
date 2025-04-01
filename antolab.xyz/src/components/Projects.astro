@@ -1,12 +1,18 @@
 ---
-const { elementsShow = -1 } = Astro.props;
+const { elementsShow = -1, titleUrl = false } = Astro.props;
 const shownProjects = Number.parseInt(elementsShow)
 ---
 
 <section class="projects">
-  <a href="/project">
-  <h2 class="section-title">Featured Projects</h2>
-  </a>
+  {
+    titleUrl ? (
+      <a href="/project">
+      <h2 class="section-title">Featured Projects</h2>
+      </a>
+    ) : (
+      <h2 class="section-title">Featured Projects</h2>
+    )
+  }
   <div class="projects-grid" id="projects-container">
     <p>Loading projects...</p>
   </div>
