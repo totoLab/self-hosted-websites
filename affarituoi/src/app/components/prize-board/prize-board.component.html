@@ -1,0 +1,19 @@
+<div class="board">
+  <div class="column" *ngIf="smallPrizes$ | async as smallPrizes">
+    <app-prize-item
+      *ngFor="let prize of smallPrizes; let i = index"
+      [prize]="prize"
+      [index]="i"
+      (eliminate)="eliminatePrize(i, false)">
+    </app-prize-item>
+  </div>
+
+  <div class="column" *ngIf="bigPrizes$ | async as bigPrizes">
+    <app-prize-item
+      *ngFor="let prize of bigPrizes; let i = index"
+      [prize]="prize"
+      [index]="i"
+      (eliminate)="eliminatePrize(i, true)">
+    </app-prize-item>
+  </div>
+</div>

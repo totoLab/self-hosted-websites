@@ -1,0 +1,12 @@
+.board {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

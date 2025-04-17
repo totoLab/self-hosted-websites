@@ -1,0 +1,74 @@
+<div
+  class="offer-box"
+  *ngIf="offerVisible$ | async; else noOffer"
+>
+<ng-container *ngIf="offerMode$ | async as offerMode">
+  <h2>Il Dottore offre:</h2>
+
+  <!-- Only Money -->
+  <ng-container *ngIf="offerMode === 'money'">
+    <p class="animated-offer">
+      <span
+        *ngFor="let digit of offerDigits; let i = index"
+        class="offer-digit"
+        [style.animationDelay]="2 + (offerLength - i - 1) * 2 + 's'"
+      >
+        {{ digit }}
+      </span>
+    </p>
+    <div class="offer-controls">
+      <button (click)="acceptOffer()">Accetta</button>
+      <button (click)="rejectOffer()">Rifiuta</button>
+    </div>
+  </ng-container>
+
+  <!-- Only Change -->
+  <ng-container *ngIf="offerMode === 'change'">
+    <p class="change-offer">Il Dottore ti propone di cambiare il tuo pacco con un altro!</p>
+    <div class="offer-controls">
+      <button (click)="acceptChange()">Accetta</button>
+      <button (click)="rejectOffer()">Rifiuta</button>
+    </div>
+  </ng-container>
+
+  <!-- Let the player choose -->
+  <ng-container *ngIf="offerMode === 'choice' && !choiceMade">
+    <p>Scegli l'offerta che vuoi:</p>
+    <div class="offer-controls">
+      <button (click)="selectOffer('money')">Voglio i soldi</button>
+      <button (click)="selectOffer('change')">Cambio pacco</button>
+    </div>
+  </ng-container>
+
+  <!-- After choice -->
+  <ng-container *ngIf="offerMode === 'choice' && choiceMade">
+    <ng-container *ngIf="playerChoice === 'money'">
+      <p class="animated-offer">
+        <span
+          *ngFor="let digit of offerDigits; let i = index"
+          class="offer-digit"
+          [style.animationDelay]="2 + (offerLength - i - 1) * 2 + 's'"
+        >
+          {{ digit }}
+        </span>
+      </p>
+      <div class="offer-controls">
+        <button (click)="acceptOffer()">Accetta</button>
+        <button (click)="rejectOffer()">Rifiuta</button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="playerChoice === 'change'">
+      <p class="change-offer">Hai scelto il cambio! Cambia il pacco e andiamo avanti!</p>
+      <div class="offer-controls">
+        <button (click)="acceptChange()">Fatto</button>
+      </div>
+      </ng-container>
+  </ng-container>
+</ng-container>
+</div>
+<ng-template #noOffer>
+  <div class="offer-box empty">
+    <h3>Il Dottore non ha ancora proposto un'offerta o cambio.</h3>
+  </div>
+</ng-template>

@@ -1,0 +1,30 @@
+.prize {
+  width: 10rem;
+  height: 3rem;
+  margin: 5px;
+  background-color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 2em;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* <-- added shadow */
+  font-weight: bold;
+  
+  &.small {
+    background-color: #1e90ff;
+  }
+
+  &.big {
+    background-color: #c93434; 
+  }
+
+  &.eliminated {
+    background-color: #3b3535;
+    text-decoration: line-through;
+    color: #fff;
+    cursor: default;
+  }
+}

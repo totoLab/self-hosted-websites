@@ -1,0 +1,19 @@
+<div class="app-container">
+  <button class="fullscreen-btn" (click)="toggleFullscreen()">Fullscreen</button>
+
+  <div class="header">
+    <img src="logo.png" alt="Game Logo" class="logo">
+    <h1>{{ title }}</h1>
+  </div>
+  
+  <app-prize-board></app-prize-board>
+
+  <div class="controls">
+    <p>Tiri rimanenti: <span>{{ remainingTurns$ | async }}</span></p>
+    <button (click)="callDoctor()">Chiamata del Dottore</button>
+    <button (click)="resetGame()">Nuova Partita</button>
+  </div>
+
+  <app-doctor-offer></app-doctor-offer>
+</div>
+
