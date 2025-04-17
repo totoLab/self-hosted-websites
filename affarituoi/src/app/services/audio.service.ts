@@ -14,7 +14,7 @@ export class AudioService {
     this.redSound.load();
 
     this.blueSound = new Audio();
-    this.blueSound.src = 'assets/red.mp3';
+    this.blueSound.src = 'assets/cuoricini.mp3';
     this.blueSound.load();
 
     this.suoneriaDottore = new Audio();
