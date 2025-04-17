@@ -83,9 +83,9 @@ export class GameService {
   
     // Play appropriate sound
     if (newPrizes[index].value >= 5000) {
-      this.audioService.playBlueSound();
-    } else {
       this.audioService.playRedSound();
+    } else {
+      this.audioService.playBlueSound();
     }
   
     // Decrease remaining turns
