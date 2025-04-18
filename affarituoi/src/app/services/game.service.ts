@@ -19,6 +19,7 @@ export class GameService {
   private offerMode = new BehaviorSubject<OfferMode>('money');
   private offer = new BehaviorSubject<number>(0);
   private offerVisible = new BehaviorSubject<boolean>(false);
+  private offerAccepted = new BehaviorSubject<boolean>(false);
 
   private doctorCallInProgress = new BehaviorSubject<boolean>(false);
 
@@ -46,6 +47,7 @@ export class GameService {
     this.offer.next(0);
     this.offerVisible.next(false);
     this.gameEnded.next(false);
+    this.offerAccepted.next(false);
   }
 
   getSmallPrizes(): Observable<Prize[]> {
@@ -66,6 +68,10 @@ export class GameService {
 
   getOfferVisibility(): Observable<boolean> {
     return this.offerVisible.asObservable();
+  }
+
+  getOfferAccepted(): Observable<boolean> {
+    return this.offerAccepted.asObservable();
   }
 
   getDoctorThinking(): Observable<boolean> {
@@ -181,7 +187,7 @@ export class GameService {
   }
   
   acceptOffer(): void {
-    this.offerVisible.next(false);
+    this.offerAccepted.next(true);
     this.gameEnded.next(true);
   }
 

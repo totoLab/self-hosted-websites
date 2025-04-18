@@ -7,7 +7,7 @@
 
   <!-- Only Money -->
   <ng-container *ngIf="offerMode === 'money'">
-    <p class="animated-offer gold-offer">
+    <p class="animated-offer gold-offer" [ngClass]="{'chosen': offerAccepted$ | async}">
       <span
         *ngFor="let digit of offerDigits; let i = index"
         class="offer-digit"
@@ -17,8 +17,13 @@
       </span>
     </p>
     <div class="offer-controls">
-      <button (click)="acceptOffer()">Accetta</button>
-      <button (click)="rejectOffer()">Rifiuta</button>
+      <ng-container *ngIf="(offerAccepted$ | async) === false; else offerAcceptedTemplate">
+        <button (click)="acceptOffer()">Accetta</button>
+        <button (click)="rejectOffer()">Rifiuta</button>
+      </ng-container>
+      <ng-template #offerAcceptedTemplate>
+        <p>Offerta Accettata!</p>
+      </ng-template>
     </div>
   </ng-container>
 

@@ -16,7 +16,8 @@ export class DoctorOfferComponent implements OnInit {
   doctorThinking$!: Observable<boolean>;
   offerDigits: string[] = [];
   offerLength: number = 0;
-
+  offerAccepted$!: Observable<boolean>;
+  
   constructor(private gameService: GameService) {}
 
   offerMode$!: Observable<'money' | 'change' | 'choice'>;
@@ -26,6 +27,7 @@ export class DoctorOfferComponent implements OnInit {
     this.offerVisible$ = this.gameService.getOfferVisibility();
     this.doctorThinking$ = this.gameService.getDoctorThinking();
     this.offerMode$ = this.gameService.getOfferMode();
+    this.offerAccepted$ = this.gameService.getOfferAccepted();
 
     this.offer$.subscribe(offer => {
       if (offer != null) {
