@@ -15,9 +15,6 @@ export class GameService {
   private smallPrizesSubject = new BehaviorSubject<Prize[]>([]);
   private bigPrizesSubject = new BehaviorSubject<Prize[]>([]);
   
-  smallPrizes$ = this.smallPrizesSubject.asObservable();
-  bigPrizes$ = this.bigPrizesSubject.asObservable();
-  
   private remainingTurns = new BehaviorSubject<number>(19);
   private offerMode = new BehaviorSubject<OfferMode>('money');
   private offer = new BehaviorSubject<number>(0);
