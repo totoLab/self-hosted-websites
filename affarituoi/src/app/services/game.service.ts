@@ -22,6 +22,7 @@ export class GameService {
   private offerMode = new BehaviorSubject<OfferMode>('money');
   private offer = new BehaviorSubject<number>(0);
   private offerVisible = new BehaviorSubject<boolean>(false);
+  private doctorThinking = new BehaviorSubject<boolean>(false);
   private gameEnded = new BehaviorSubject<boolean>(false);
   private doctorCalls = 0;
 
@@ -66,6 +67,10 @@ export class GameService {
 
   getOfferVisibility(): Observable<boolean> {
     return this.offerVisible.asObservable();
+  }
+
+  getDoctorThinking(): Observable<boolean> {
+    return this.doctorThinking.asObservable();
   }
 
   getGameEndedStatus(): Observable<boolean> {
@@ -128,6 +133,7 @@ export class GameService {
   
   doctorCall(): Promise<void> {
     this.doctorCalls += 1;
+    this.doctorThinking.next(true);
     this.audioService.playSuoneriaDottore();
   
     return new Promise((resolve) => {
@@ -154,6 +160,7 @@ export class GameService {
           this.offerMode.next('choice');
         }
   
+        this.doctorThinking.next(false);
         this.offerVisible.next(true);
         resolve(); // Done
       });

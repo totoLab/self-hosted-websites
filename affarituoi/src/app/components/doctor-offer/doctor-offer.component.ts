@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 export class DoctorOfferComponent implements OnInit {
   offer$!: Observable<number>;
   offerVisible$!: Observable<boolean>;
+  doctorThinking$!: Observable<boolean>;
   offerDigits: string[] = [];
   offerLength: number = 0;
 
@@ -23,6 +24,7 @@ export class DoctorOfferComponent implements OnInit {
   ngOnInit(): void {
     this.offer$ = this.gameService.getOffer();
     this.offerVisible$ = this.gameService.getOfferVisibility();
+    this.doctorThinking$ = this.gameService.getDoctorThinking();
     this.offerMode$ = this.gameService.getOfferMode();
 
     this.offer$.subscribe(offer => {

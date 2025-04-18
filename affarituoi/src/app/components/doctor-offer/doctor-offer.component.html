@@ -1,6 +1,6 @@
 <div
   class="offer-box"
-  *ngIf="offerVisible$ | async; else noOffer"
+  *ngIf="offerVisible$ | async; else thinking"
 >
 <ng-container *ngIf="offerMode$ | async as offerMode">
   <h2>Il Dottore offre:</h2>
@@ -67,6 +67,15 @@
   </ng-container>
 </ng-container>
 </div>
+
+<ng-template #thinking>
+  <div 
+  *ngIf="doctorThinking$ | async; else noOffer"
+  class="offer-box empty">
+  <h3>Il Dottore sta chiamando!</h3>
+</div>
+</ng-template>
+
 <ng-template #noOffer>
   <div class="offer-box empty">
     <h3>Il Dottore non ha ancora proposto un'offerta o cambio.</h3>
