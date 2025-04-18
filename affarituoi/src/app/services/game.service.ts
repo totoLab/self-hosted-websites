@@ -76,8 +76,11 @@ export class GameService {
     const prizeListSubject = smallBig ? this.bigPrizesSubject : this.smallPrizesSubject;
     const currentPrizes = prizeListSubject.getValue();
   
-    if (currentPrizes[index].eliminated) return;
-  
+    if (currentPrizes[index].eliminated) {
+      this.undoEliminatePrize(index, smallBig);
+      return;
+    }
+
     const newPrizes = [...currentPrizes];
     newPrizes[index] = { ...newPrizes[index], eliminated: true };
     prizeListSubject.next(newPrizes);
@@ -103,6 +106,25 @@ export class GameService {
       this.gameEnded.next(true);
     }
   }
+
+  undoEliminatePrize(index: number, smallBig: boolean): void {
+    const prizeListSubject = smallBig ? this.bigPrizesSubject : this.smallPrizesSubject;
+    const currentPrizes = prizeListSubject.getValue();
+  
+    if (!currentPrizes[index].eliminated) return;
+  
+    const newPrizes = [...currentPrizes];
+    newPrizes[index] = { ...newPrizes[index], eliminated: false };
+    prizeListSubject.next(newPrizes);
+  
+    const newRemainingTurns = this.remainingTurns.getValue() + 1;
+    this.remainingTurns.next(newRemainingTurns);
+  
+    if (this.gameEnded.getValue() && newRemainingTurns > 0) {
+      this.gameEnded.next(false);
+    }
+  }
+  
   
   doctorCall(): Promise<void> {
     this.doctorCalls += 1;

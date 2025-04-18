@@ -4,7 +4,7 @@
       *ngFor="let prize of smallPrizes; let i = index"
       [prize]="prize"
       [index]="i"
-      (eliminate)="eliminatePrize(i, false)">
+      (click)="handlePrizeSelection(i, false)">
     </app-prize-item>
   </div>
 
@@ -13,7 +13,7 @@
       *ngFor="let prize of bigPrizes; let i = index"
       [prize]="prize"
       [index]="i"
-      (eliminate)="eliminatePrize(i, true)">
+      (click)="handlePrizeSelection(i, true)">
     </app-prize-item>
   </div>
 </div>

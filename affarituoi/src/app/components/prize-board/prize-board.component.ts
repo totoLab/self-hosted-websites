@@ -24,7 +24,7 @@ export class PrizeBoardComponent implements OnInit {
     this.smallPrizes$ = this.gameService.getSmallPrizes();
   }
 
-  eliminatePrize(index: number, smallBig: boolean): void {
+  handlePrizeSelection(index: number, smallBig: boolean): void {
     this.gameService.eliminatePrize(index, smallBig);
   }
 }

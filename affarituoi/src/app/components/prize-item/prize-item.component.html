@@ -5,7 +5,7 @@
     big: prize.smallBig && !prize.eliminated,
     small: !prize.smallBig && !prize.eliminated
   }"
-  (click)="onEliminate()"
+  (click)="onClick()"
 >
   €{{ prize.value | number:'1.0-0':'de' }}
 </div>

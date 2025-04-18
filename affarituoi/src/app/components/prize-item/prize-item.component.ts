@@ -12,15 +12,13 @@ import { Prize } from '../../models/prize.model';
 export class PrizeItemComponent {
   @Input() prize!: Prize;
   @Input() index!: number;
-  @Output() eliminate = new EventEmitter<number>();
+  @Output() click = new EventEmitter<number>();
 
   ngOnInit(): void {
     this.prize.smallBig = this.prize.value >= 5000;
   }
 
-  onEliminate(): void {
-    if (!this.prize.eliminated) {
-      this.eliminate.emit(this.index);
-    }
+  onClick(): void {
+      this.click.emit(this.index);
   }
 }
