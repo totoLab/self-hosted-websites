@@ -99,15 +99,16 @@ export class GameService {
   
     // Play appropriate sound
     if (this.remainingTurns.getValue() === 1) {
-      if (this.getOfferAccepted()) {
-        if (this.offer.value > currentPrizes[0].value) {
+      if (this.offerAccepted.getValue()) {
+        const remainingPrizes = currentPrizes.filter(prize => !prize.eliminated);
+        if (this.offer.getValue() > remainingPrizes[0].value) {
           this.audioService.playVictorySound();
         } else {
           this.audioService.playRedSound();
         }
 
       } else { 
-        if (currentPrizes[0] > currentPrizes[index]) {
+        if (currentPrizes[0].value > currentPrizes[index].value) {
           this.audioService.playVictorySound();
         } else {
           this.audioService.playRedSound();
@@ -117,7 +118,18 @@ export class GameService {
       if (newPrizes[index].value >= 5000) {
         this.audioService.playRedSound();
       } else {
-        this.audioService.playBlueSound();
+        const bigPrizes = this.bigPrizesSubject.getValue();
+        if (bigPrizes.some(prize => !prize.eliminated)) {
+          const rand = Math.random();
+          if (rand < 0.3) {
+            this.audioService.playBlueSound();
+          } else {
+            this.audioService.playNormalSound();
+          }
+        } else {
+          this.audioService.playNormalSound();
+        }
+        
       }
     }
   

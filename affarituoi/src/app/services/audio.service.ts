@@ -51,6 +51,14 @@ export class AudioService {
     this.playBoxSound('assets/cuoricini.mp3');
   }
 
+  playNormalSound(): void {
+    this.playBoxSound('assets/normal.mp3');
+  }
+ 
+  playRifiutoOffertaCambio(): void {
+    this.playBoxSound('assets/rifiuto.mp3');
+  }
+ 
   playVictorySound(): void {
     this.playBoxSound('assets/epic.mp3');
   }
