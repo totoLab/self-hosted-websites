@@ -103,34 +103,39 @@ export class GameService {
     }
   }
   
-  doctorCall(): void {
+  doctorCall(): Promise<void> {
     this.audioService.playSuoneriaDottore();
-    this.delay(10, () => {
-      const allPrizes = [
-        ...this.smallPrizesSubject.getValue(),
-        ...this.bigPrizesSubject.getValue()
-      ];
-      const remainingPrizes = allPrizes.filter(prize => !prize.eliminated);
-      if (remainingPrizes.length === 0) return;
   
-      const rand = Math.random();
+    return new Promise((resolve) => {
+      this.delay(10, () => {
+        const allPrizes = [
+          ...this.smallPrizesSubject.getValue(),
+          ...this.bigPrizesSubject.getValue()
+        ];
+        const remainingPrizes = allPrizes.filter(prize => !prize.eliminated);
+        if (remainingPrizes.length === 0) {
+          resolve(); // Done
+          return;
+        }
   
-      if (rand < 0.3) {
-        // Only money
-        this.setMoneyOffer(remainingPrizes);
-        this.offerMode.next('money');
-      } else if (rand < 0.6) {
-        // Only change
-        this.offerMode.next('change');
-      } else {
-        // Let the player choose
-        this.setMoneyOffer(remainingPrizes); // still calculate it in case they pick it
-        this.offerMode.next('choice');
-      }
+        const rand = Math.random();
   
-      this.offerVisible.next(true);
+        if (rand < 0.3) {
+          this.setMoneyOffer(remainingPrizes);
+          this.offerMode.next('money');
+        } else if (rand < 0.6) {
+          this.offerMode.next('change');
+        } else {
+          this.setMoneyOffer(remainingPrizes);
+          this.offerMode.next('choice');
+        }
+  
+        this.offerVisible.next(true);
+        resolve(); // Done
+      });
     });
   }
+  
   
   private setMoneyOffer(remainingPrizes: Prize[]): void {
     const avg = remainingPrizes.reduce((sum, prize) => sum + prize.value, 0) / remainingPrizes.length;

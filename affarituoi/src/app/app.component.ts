@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from './services/game.service';
 import { Observable } from 'rxjs';
@@ -15,6 +15,7 @@ import { DoctorOfferComponent } from './components/doctor-offer/doctor-offer.com
 export class AppComponent {
   title = 'Affari Tuoi';
   remainingTurns$: Observable<number>;
+  isDoctorCallDisabled = false;
   
   constructor(private gameService: GameService) {
     this.remainingTurns$ = this.gameService.getRemainingTurns();
@@ -33,7 +34,11 @@ export class AppComponent {
   }
 
   callDoctor(): void {
-    this.gameService.doctorCall();
+    this.isDoctorCallDisabled = true;
+
+    this.gameService.doctorCall().finally(() => {
+      this.isDoctorCallDisabled = false;
+    });
   }
 
   resetGame(): void {
