@@ -23,6 +23,7 @@ export class GameService {
   private offer = new BehaviorSubject<number>(0);
   private offerVisible = new BehaviorSubject<boolean>(false);
   private gameEnded = new BehaviorSubject<boolean>(false);
+  private doctorCalls = 0;
 
   constructor(private audioService: AudioService) {
     this.resetGame();
@@ -93,7 +94,7 @@ export class GameService {
     this.remainingTurns.next(newRemainingTurns);
   
     // Trigger doctor's call at specific turns
-    if ([15, 11, 6].includes(newRemainingTurns)) {
+    if ([15, 11, 6, 2].slice(this.doctorCalls).includes(newRemainingTurns)) {
       setTimeout(() => this.doctorCall(), 1000);
     }
   
@@ -104,6 +105,7 @@ export class GameService {
   }
   
   doctorCall(): Promise<void> {
+    this.doctorCalls += 1;
     this.audioService.playSuoneriaDottore();
   
     return new Promise((resolve) => {
