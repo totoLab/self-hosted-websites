@@ -4,33 +4,59 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AudioService {
-  private redSound: HTMLAudioElement;
-  private blueSound: HTMLAudioElement;
+  private boxSound: HTMLAudioElement;
   private suoneriaDottore: HTMLAudioElement;
 
   constructor() {
-    this.redSound = new Audio();
-    this.redSound.src = 'assets/red.mp3';
-    this.redSound.load();
-
-    this.blueSound = new Audio();
-    this.blueSound.src = 'assets/cuoricini.mp3';
-    this.blueSound.load();
+    this.boxSound = new Audio();
 
     this.suoneriaDottore = new Audio();
     this.suoneriaDottore.src = 'assets/suoneria_dottore.mp3';
     this.suoneriaDottore.load();
   }
 
+  fadeVolume(callback?: () => void): void {
+    const factor = 0.01;
+    const speed = 50;
+
+    const fade = () => {
+      if (this.boxSound.volume > factor) {
+        this.boxSound.volume -= factor;
+        setTimeout(fade, speed);
+      } else {
+        this.boxSound.volume = 0;
+        if (typeof callback === 'function') callback();
+      }
+    };
+
+    fade();
+
+  }
+
+  resetVolume() {
+    this.boxSound.volume = 1;
+  }
+
+  playBoxSound(asset: string): void {
+    this.boxSound.src = asset;
+    this.boxSound.load();
+    this.boxSound.play();
+  }
+ 
   playRedSound(): void {
-    this.redSound.play();
+    this.playBoxSound('assets/red.mp3');
   }
 
   playBlueSound(): void {
-    this.blueSound.play();
+    this.playBoxSound('assets/cuoricini.mp3');
   }
 
   playSuoneriaDottore(): void {
+    this.fadeVolume(() => {
+      this.boxSound.pause();
+      this.boxSound.volume = 1;
+    });
+    
     this.suoneriaDottore.play();
   }
 }
