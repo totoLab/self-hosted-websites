@@ -48,6 +48,8 @@ export class GameService {
     this.offerVisible.next(false);
     this.gameEnded.next(false);
     this.offerAccepted.next(false);
+    this.doctorCalls = 0;
+    this.audioService.reset()
   }
 
   getSmallPrizes(): Observable<Prize[]> {

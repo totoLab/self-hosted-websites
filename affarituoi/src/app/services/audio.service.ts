@@ -63,4 +63,9 @@ export class AudioService {
     
     this.suoneriaDottore.play();
   }
+
+  reset() {
+    this.boxSound.load();
+    this.suoneriaDottore.load();
+  }
 }
