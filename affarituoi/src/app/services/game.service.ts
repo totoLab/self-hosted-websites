@@ -46,6 +46,8 @@ export class GameService {
     this.remainingTurns.next(19);
     this.offer.next(0);
     this.offerVisible.next(false);
+    this.offerMode.next("money");
+    this.doctorCallInProgress.next(false);
     this.gameEnded.next(false);
     this.offerAccepted.next(false);
     this.doctorCalls = 0;
@@ -224,10 +226,11 @@ export class GameService {
 
   rejectOffer(): void {
     this.offerVisible.next(false);
+    this.audioService.playRifiutoOffertaCambio();
   }
 
   performBoxSwap(): void {
-    this.rejectOffer();
+    this.offerVisible.next(false);
   }
 
   delay(s: number, callback: () => void): void {
