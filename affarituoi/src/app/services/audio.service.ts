@@ -54,7 +54,7 @@ export class AudioService {
   playSuoneriaDottore(): void {
     this.fadeVolume(() => {
       this.boxSound.pause();
-      this.boxSound.volume = 1;
+      this.resetVolume();
     });
     
     this.suoneriaDottore.play();
