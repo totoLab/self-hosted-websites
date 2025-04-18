@@ -10,7 +10,7 @@
 
   <div class="controls">
     <p>Tiri rimanenti: <span>{{ remainingTurns$ | async }}</span></p>
-    <button (click)="callDoctor()" [disabled]="isDoctorCallDisabled">Chiamata del Dottore</button>
+    <button (click)="callDoctor()" [disabled]="isDoctorCallDisabled$ | async">Chiamata del Dottore</button>
     <button (click)="resetGame()">Nuova Partita</button>
   </div>
 

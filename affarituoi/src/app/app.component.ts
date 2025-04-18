@@ -1,7 +1,7 @@
 import { Component, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from './services/game.service';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { PrizeBoardComponent } from './components/prize-board/prize-board.component';
 import { DoctorOfferComponent } from './components/doctor-offer/doctor-offer.component';
 
@@ -15,10 +15,11 @@ import { DoctorOfferComponent } from './components/doctor-offer/doctor-offer.com
 export class AppComponent {
   title = 'Affari Tuoi';
   remainingTurns$: Observable<number>;
-  isDoctorCallDisabled = false;
-  
+  isDoctorCallDisabled$: Observable<boolean>;
+
   constructor(private gameService: GameService) {
     this.remainingTurns$ = this.gameService.getRemainingTurns();
+    this.isDoctorCallDisabled$ = this.gameService.getDoctorThinking();
   }
 
   toggleFullscreen(): void {
@@ -34,11 +35,7 @@ export class AppComponent {
   }
 
   callDoctor(): void {
-    this.isDoctorCallDisabled = true;
-
-    this.gameService.doctorCall().finally(() => {
-      this.isDoctorCallDisabled = false;
-    });
+    this.gameService.doctorCall();
   }
 
   resetGame(): void {
