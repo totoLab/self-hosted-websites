@@ -131,6 +131,8 @@ export class GameService {
   
   
   doctorCall(): Promise<void> {
+    if (this.gameEnded.getValue()) return new Promise(() => {}); // no new offers
+
     this.doctorCalls += 1;
     this.doctorCallInProgress.next(true);
     this.audioService.playSuoneriaDottore();

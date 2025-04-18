@@ -1,11 +1,12 @@
 .offer-box {
   border: 4px solid #fff;
-  background: #111;
+  background: #2e2b2b;
   padding: 40px;
   text-align: center;
   margin: 30px auto;
   width: 600px;
   font-size: 2em;
+  font-weight: bold;
 
   h2 {
     margin-top: 0;
@@ -32,6 +33,31 @@
     }
   }
 
+  .gold-offer {
+    margin: 1rem; 
+    width: 15rem;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1.4;
+    padding: 0 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #ffb92e;
+    box-shadow: 0 4px 8px rgba(255, 185, 46, 0.3);
+  }
+  
+  .gold-offer.full {
+    height: 4rem;
+    line-height: 1.9;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .chosen {
+    color: green;
+  }
+  
   .offer-controls {
     display: flex;
     justify-content: center;

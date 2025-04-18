@@ -1,7 +1,7 @@
 import { Component, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from './services/game.service';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, combineLatest, map  } from 'rxjs';
 import { PrizeBoardComponent } from './components/prize-board/prize-board.component';
 import { DoctorOfferComponent } from './components/doctor-offer/doctor-offer.component';
 
@@ -19,7 +19,12 @@ export class AppComponent {
 
   constructor(private gameService: GameService) {
     this.remainingTurns$ = this.gameService.getRemainingTurns();
-    this.isDoctorCallDisabled$ = this.gameService.getDoctorThinking();
+    this.isDoctorCallDisabled$ = combineLatest([
+      this.gameService.getDoctorThinking(),
+      this.gameService.getGameEndedStatus()
+    ]).pipe(
+      map(([thinking, ended]) => thinking || ended)
+    );
   }
 
   toggleFullscreen(): void {

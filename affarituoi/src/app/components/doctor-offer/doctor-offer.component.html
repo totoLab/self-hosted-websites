@@ -7,7 +7,7 @@
 
   <!-- Only Money -->
   <ng-container *ngIf="offerMode === 'money'">
-    <p class="animated-offer">
+    <p class="animated-offer gold-offer">
       <span
         *ngFor="let digit of offerDigits; let i = index"
         class="offer-digit"
@@ -24,7 +24,7 @@
 
   <!-- Only Change -->
   <ng-container *ngIf="offerMode === 'change'">
-    <p class="change-offer">Il Dottore ti propone di cambiare il tuo pacco con un altro!</p>
+    <p class="change-offer">Il Dottore ti propone un <span class="gold-offer full">CAMBIO</span></p>
     <div class="offer-controls">
       <button (click)="acceptChange()">Accetta</button>
       <button (click)="rejectOffer()">Rifiuta</button>
@@ -43,7 +43,7 @@
   <!-- After choice -->
   <ng-container *ngIf="offerMode === 'choice' && choiceMade">
     <ng-container *ngIf="playerChoice === 'money'">
-      <p class="animated-offer">
+      <p class="animated-offer gold-offer">
         <span
           *ngFor="let digit of offerDigits; let i = index"
           class="offer-digit"
@@ -59,7 +59,7 @@
     </ng-container>
 
     <ng-container *ngIf="playerChoice === 'change'">
-      <p class="change-offer">Hai scelto il cambio! Cambia il pacco e andiamo avanti!</p>
+      <p class="change-offer">Hai scelto il <span class="gold-offer full chosen">CAMBIO</span><br> Cambia il pacco e andiamo avanti!</p>
       <div class="offer-controls">
         <button (click)="acceptChange()">Fatto</button>
       </div>
