@@ -96,10 +96,27 @@ export class GameService {
     prizeListSubject.next(newPrizes);
   
     // Play appropriate sound
-    if (newPrizes[index].value >= 5000) {
-      this.audioService.playRedSound();
-    } else {
-      this.audioService.playBlueSound();
+    if (this.remainingTurns.getValue() === 1) {
+      if (this.getOfferAccepted()) {
+        if (this.offer.value > currentPrizes[0].value) {
+          this.audioService.playVictorySound();
+        } else {
+          this.audioService.playRedSound();
+        }
+
+      } else { 
+        if (currentPrizes[0] > currentPrizes[index]) {
+          this.audioService.playVictorySound();
+        } else {
+          this.audioService.playRedSound();
+        }
+      }
+    } else { 
+      if (newPrizes[index].value >= 5000) {
+        this.audioService.playRedSound();
+      } else {
+        this.audioService.playBlueSound();
+      }
     }
   
     // Decrease remaining turns

@@ -51,6 +51,10 @@ export class AudioService {
     this.playBoxSound('assets/cuoricini.mp3');
   }
 
+  playVictorySound(): void {
+    this.playBoxSound('assets/epic.mp3');
+  }
+
   playSuoneriaDottore(): void {
     this.fadeVolume(() => {
       this.boxSound.pause();
