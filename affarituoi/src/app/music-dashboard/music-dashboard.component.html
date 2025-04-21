@@ -1,0 +1,16 @@
+<div class="music-dashboard-container">
+    <h2>Music Player</h2>
+    
+    <div class="audio-buttons-grid">
+      <button 
+        *ngFor="let asset of audioAssets" 
+        class="audio-button"
+        (click)="playSound(asset)">
+        {{ asset.displayName }}
+      </button>
+    </div>
+    
+    <div class="player-controls">
+      <p class="now-playing-text">{{ nowPlayingText }}</p>
+    </div>
+  </div>

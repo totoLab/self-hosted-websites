@@ -63,6 +63,12 @@ export class AudioService {
     this.playBoxSound('assets/epic.mp3');
   }
 
+  playSound(filename: string): void {
+    this.boxSound.src = filename;
+    this.boxSound.load();
+    this.boxSound.play();
+  }
+
   playSuoneriaDottore(): void {
     this.fadeVolume(() => {
       this.boxSound.pause();

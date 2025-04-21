@@ -4,11 +4,12 @@ import { GameService } from './services/game.service';
 import { Observable, combineLatest, map  } from 'rxjs';
 import { PrizeBoardComponent } from './components/prize-board/prize-board.component';
 import { DoctorOfferComponent } from './components/doctor-offer/doctor-offer.component';
+import { MusicDashBoard } from "./music-dashboard/music-dashboard.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, PrizeBoardComponent, DoctorOfferComponent],
+  imports: [CommonModule, PrizeBoardComponent, DoctorOfferComponent, MusicDashBoard],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
