@@ -46,4 +46,8 @@ export class MusicDashBoard implements OnInit {
     this.nowPlayingText = `Now playing: ${audio.displayName}`;
     this.currentTrack = audio;
   }
+
+  pause(): void {
+    this.audioService.fadeVolume();
+  }
 }

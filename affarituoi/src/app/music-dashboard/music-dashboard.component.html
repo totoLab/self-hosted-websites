@@ -8,6 +8,11 @@
         (click)="playSound(asset)">
         {{ asset.displayName }}
       </button>
+      <button
+        id="stop-button"
+        class="audio-button"
+        (click)="pause()"
+      >Stop music</button>
     </div>
     
     <div class="player-controls">
