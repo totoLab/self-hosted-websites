@@ -1,99 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        :root {
-            --cell-size: 140px;
-            --title-height: 80px;
-            --header-height: 50px;
-            --container-height: calc(var(--title-height) + var(--header-height));
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-
-        .calendar {
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .calendar-title {
-            height: var(--title-height);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 40px;
-            font-weight: bold;
-        }
-
-        .calendar-header {
-            height: var(--header-height);
-            display: grid;
-            grid-template-columns: repeat(7, var(--cell-size));
-        }
-
-        .header-cell {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 26px;
-            font-weight: bold;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, var(--cell-size));
-            grid-template-rows: repeat(6, var(--cell-size));
-        }
-
-        .calendar-cell {
-            border: 1px solid black;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: lightgray;
-        }
-
-        .calendar-cell.has-content {
-            background-color: var(--maker-color);
-        }
-
-        .date-number {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .content-type {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .content-maker {
-            font-size: 23px;
-            font-weight: bold;
-        }
-
-        .controls {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .controls button {
-            padding: 10px 20px;
-            margin: 0 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
     <div id="calendar-container">
@@ -108,120 +16,15 @@
         </div>
     </div>
 
-    <script>
-        let config; // Declare globally for access
-        let schedule; // Declare globally for access
-        let currentDate = new Date();
+    <div class="container">
+        <h2>Quick Links</h2>
+        <ul id="links" class="container">
 
-        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
-    
-        async function fetchJson(name) {
-            try {
-                const response = await fetch(`./${name}`); // Relative path to the JSON file
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error('Error fetching JSON:', error);
-                throw error;
-            }
-        }
-    
-        async function initializeCalendar() {
-            try {
-                config = await fetchJson("config_rcy.json");
-                schedule = await fetchJson("schedule_rcy.json");
-                updateCalendar(); // Update calendar only after config and schedule are loaded
-            } catch (error) {
-                console.error('Error initializing calendar:', error);
-            }
-        }
-    
-        function updateCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-    
-            // Update title
-            const titleElement = document.querySelector('.calendar-title');
-            titleElement.textContent = `Calendario RCY ${monthNames[month]} ${year}`;
-    
-            // Update header
-            const headerElement = document.querySelector('.calendar-header');
-            headerElement.innerHTML = '';
-            const daysOfWeek = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
-            daysOfWeek.forEach(day => {
-                const headerCell = document.createElement('div');
-                headerCell.className = 'header-cell';
-                headerCell.textContent = day;
-                headerElement.appendChild(headerCell);
-            });
-    
-            // Update grid
-            const gridElement = document.querySelector('.calendar-grid');
-            gridElement.innerHTML = '';
-    
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const daysInMonth = lastDay.getDate();
-    
-            // Calculate offset based on first weekday configuration
-            let offset = firstDay.getDay();
-            offset = (offset + 6) % 7; // Adjust for Monday as the first day
-    
-            // Create calendar cells
-            for (let i = 0; i < 42; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-cell';
-    
-                const dayNumber = i - offset + 1;
-                if (dayNumber > 0 && dayNumber <= daysInMonth) {
-                    const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`;
-                    const content = schedule[dateString];
-    
-                    const dateDiv = document.createElement('div');
-                    dateDiv.className = 'date-number';
-                    dateDiv.textContent = dayNumber;
-                    cell.appendChild(dateDiv);
-    
-                    if (content) {
-                        cell.classList.add('has-content');
-                        cell.style.setProperty('--maker-color', getMakerColor(content.maker));
-    
-                        const typeDiv = document.createElement('div');
-                        typeDiv.className = 'content-type';
-                        typeDiv.textContent = content.type;
-                        cell.appendChild(typeDiv);
-    
-                        const makerDiv = document.createElement('div');
-                        makerDiv.className = 'content-maker';
-                        makerDiv.textContent = content.maker;
-                        cell.appendChild(makerDiv);
-                    }
-                }
-    
-                gridElement.appendChild(cell);
-            }
-        }
-    
-        function getMakerColor(maker) {
-            const person = config.peopleColors.find(p => p.name === maker);
-            return person ? `#${person.color}` : '#d3d3d3'; // Fallback to light gray
-        }
-    
-        function previousMonth() {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            updateCalendar();
-        }
-    
-        function nextMonth() {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            updateCalendar();
-        }
-    
-        // Initialize calendar
-        initializeCalendar();
-    </script>
+        </ul>
+    </div>
+
+    <script src="calendar.js"></script>
+    <script src="links.js"></script>
     
 </body>
 </html>
