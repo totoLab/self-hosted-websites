@@ -123,11 +123,13 @@ function getMakerColor(maker) {
 }
 
 function previousMonth() {
+  currentDate.setDate(1);
   currentDate.setMonth(currentDate.getMonth() - 1);
   updateCalendar();
 }
 
 function nextMonth() {
+  currentDate.setDate(1);
   currentDate.setMonth(currentDate.getMonth() + 1);
   updateCalendar();
 }
